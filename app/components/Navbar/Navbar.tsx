@@ -13,17 +13,19 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  const open = () => {
-    setIsOpen(true);
-  };
-
   const close = () => {
     setIsOpen(false);
   };
 
   return (
     <header>
-      <div className="flex w-full items-center justify-between bg-primary px-8 py-2 dark:bg-dark md:grid md:grid-cols-3 md:items-stretch md:p-0">
+      <div
+        className={clsx({
+          "flex h-24 w-full items-center justify-between bg-primary px-8 py-2 dark:bg-dark md:grid md:grid-cols-3 md:items-stretch md:p-0":
+            true,
+          "fixed  left-0 top-0 z-50": pathname.includes("/blogs/"),
+        })}
+      >
         <Link href="/" passHref>
           <div
             className={clsx({
