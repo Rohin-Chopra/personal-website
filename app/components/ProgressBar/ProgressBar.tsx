@@ -1,6 +1,5 @@
 "use client";
 
-import { Progress } from "@/components/ui/progress";
 import { useEffect, useState } from "react";
 
 export const ProgressBar = () => {
@@ -24,9 +23,13 @@ export const ProgressBar = () => {
   }, []);
 
   return (
-    <Progress
-      value={progress}
-      className="fixed left-0 top-24 z-50 mb-4 h-1 w-full rounded-none bg-transparent"
-    />
+    <div className="fixed left-0 top-24 z-40 mb-4 h-1 w-full rounded-none bg-slate-100 dark:bg-slate-800">
+      <div
+        className="z-50 h-full bg-slate-900 dark:bg-slate-50"
+        style={{
+          width: `${progress}%`,
+        }}
+      ></div>
+    </div>
   );
 };
