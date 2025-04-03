@@ -2,31 +2,41 @@
   {
     "link": "https://makemycareer.rohinchopra.com",
     "imgUrl": "/makemycareer.png",
-    "title": "Makemycareer"
-  },
-  {
-    "link": "https://digishelf.rohinchopra.com",
-    "imgUrl": "/digishelf.png",
-    "title": "Digishelf"
+    "title": "Makemycareer",
+    "description": "A career guidance platform that helps users discover their ideal career path based on their skills, interests, and market demand.",
+    "technologies": ["React", "Next.js", "Tailwind CSS", "AWS"],
+    "github": "https://github.com/Rohin-Chopra/makemycareer"
   },
   {
     "link": "https://www.margembielabradors.com.au",
     "imgUrl": "/margembie-labradors.png",
-    "title": "Margembie Labradors"
+    "title": "Margembie Labradors",
+    "description": "A professional website for a Labrador breeding business, showcasing their dogs, services, and contact information.",
+    "technologies": ["React", "Gatsby", "Tailwind CSS", "Netlify"],
+    "github": "https://github.com/Rohin-Chopra/margembie-labradors"
   },
   {
     "link": "https://snap-landing-page-wine.vercel.app",
     "imgUrl": "/snap-landing-page.png",
-    "title": "Snap Landing Page"
+    "title": "Snap Landing Page",
+    "description": "A modern landing page for a photography service, featuring a responsive design and interactive elements.",
+    "technologies": ["HTML", "CSS", "JavaScript", "Responsive Design"],
+    "github": "https://github.com/Rohin-Chopra/snap-landing-page"
   },
   {
     "link": "https://sunnyside-landing-page-rohin.netlify.app",
     "imgUrl": "/sunny-side-landing-page.png",
-    "title": "Sunny Side Landing Page"
+    "title": "Sunny Side Landing Page",
+    "description": "A creative landing page for a digital agency, highlighting their services and portfolio with an engaging design.",
+    "technologies": ["HTML", "CSS", "JavaScript", "Responsive Design"],
+    "github": "https://github.com/Rohin-Chopra/sunnyside-landing-page"
   },
   {
     "link": "https://frontend-challenges-amber.vercel.app",
     "imgUrl": "/advice-generator-app.png",
-    "title": "Advice Generator App"
+    "title": "Advice Generator App",
+    "description": "An interactive application that provides random advice to users, built as part of a frontend challenge.",
+    "technologies": ["React", "API Integration", "CSS", "Vercel"],
+    "github": "https://github.com/Rohin-Chopra/advice-generator-app"
   }
 ]

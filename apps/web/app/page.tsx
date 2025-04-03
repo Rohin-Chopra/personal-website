@@ -23,9 +23,11 @@ import { ContactForm } from "@/components/ContactForm";
 import { Button } from "@/components/Elements/Button";
 import { BlogItem } from "@/components/BlogItem";
 import { getBlogs } from "@/lib/getBlogs";
+import projects from "./(subpages)/projects/projects.json";
 
 const HomePage = async () => {
   const posts = await getBlogs();
+  const featuredProjects = projects.slice(0, 3);
 
   return (
     <>
@@ -199,6 +201,47 @@ const HomePage = async () => {
                 alt="Hashicorp Terraform Associate Certificate"
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" className="py-8 dark:text-white md:px-6">
+        <div className="container mx-auto">
+          <h2 className="mb-2 mt-4 text-2xl font-bold md:text-4xl">
+            Featured Projects
+          </h2>
+          <div className="grid gap-6 md:grid-cols-3">
+            {featuredProjects.map((project) => (
+              <div
+                key={project.title}
+                className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-darkGray"
+              >
+                <div className="relative h-40 w-full overflow-hidden">
+                  <Image
+                    src={project.imgUrl}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="mb-2 text-lg font-bold">{project.title}</h3>
+                  {project.description && (
+                    <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
+                      {project.description.length > 100
+                        ? `${project.description.substring(0, 100)}...`
+                        : project.description}
+                    </p>
+                  )}
+                  <Link
+                    href="/projects"
+                    className="text-sm font-medium text-primary hover:underline"
+                  >
+                    View all projects →
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
