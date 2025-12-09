@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 import { FaSpinner } from "react-icons/fa";
 import { z } from "zod";
 
-import { Button } from "@/components/elements/button";
-import { Input } from "@/components/elements/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
 const API_URI = process.env.NEXT_PUBLIC_API_URI;
@@ -74,9 +74,8 @@ export const ContactForm = () => {
         </label>
         <Input
           id="name"
-          name="name"
-          register={register}
-          isError={!!errors.name?.message}
+          {...register("name")}
+          className={errors.name?.message ? "border-danger" : ""}
           autoComplete="name"
         />
         <span className="mt-1 text-danger">{errors.name?.message}</span>
@@ -87,9 +86,9 @@ export const ContactForm = () => {
         </label>
         <Input
           id="email"
-          name="email"
-          register={register}
-          isError={!!errors.email?.message}
+          type="email"
+          {...register("email")}
+          className={errors.email?.message ? "border-danger" : ""}
           autoComplete="email"
         />
         <span className="mt-1 text-danger">{errors.email?.message}</span>
@@ -113,9 +112,9 @@ export const ContactForm = () => {
       </div>
       <Button
         type="submit"
-        variant={Button.Variants.PRIMARY}
+        variant="default"
         disabled={isLoading}
-        className="mt-4 w-full py-2 font-semibold disabled:opacity-60 md:text-lg"
+        className="mt-4 w-full bg-primary text-white hover:bg-primary/90 font-semibold md:text-lg"
       >
         {isLoading ? (
           <FaSpinner className="inline animate-spin text-white" />

@@ -20,7 +20,7 @@ import {
 import { SiMicrosoftazure } from "react-icons/si";
 
 import { ContactForm } from "@/components/contact-form";
-import { Button } from "@/components/elements/button";
+import { Button } from "@/components/ui/button";
 import { BlogItem } from "@/components/blog-item";
 import { getBlogs } from "@/lib/getBlogs";
 import projects from "./(subpages)/projects/projects.json";
@@ -257,7 +257,9 @@ const HomePage = async () => {
               </div>
             ))}
             <Link href="/blogs">
-              <Button className="mx-auto block bg-primary">View More</Button>
+              <Button variant="default" className="mx-auto block bg-primary text-white hover:bg-primary/90">
+                View More
+              </Button>
             </Link>
           </div>
         </div>

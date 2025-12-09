@@ -24,7 +24,8 @@ export const MDXBlogBody = ({ blog }: Props) => {
             remarkPlugins: [remarkGfm, remarkFrontmatter],
             rehypePlugins: [
               [
-                rehypeHighlight as unknown as typeof rehypeHighlight,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                rehypeHighlight as any,
                 {
                   languages: {
                     ...all,
