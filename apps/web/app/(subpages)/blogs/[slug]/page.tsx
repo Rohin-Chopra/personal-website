@@ -7,7 +7,7 @@ import { MDXBlogBody } from "@/(subpages)/blogs/[slug]/mdx/MDXBlogBody";
 import type { BlogParams } from "@/(subpages)/blogs/[slug]/types";
 import { getBlog } from "@/lib/getBlog";
 import { getBlogs } from "@/lib/getBlogs";
-import { ScrollProgressBar } from "@/components/ScrollProgressBar/ScrollProgressBar";
+import { ScrollProgressBar } from "@/components/scroll-progress-bar";
 
 import "./style.css";
 

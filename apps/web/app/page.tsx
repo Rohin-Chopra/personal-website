@@ -19,9 +19,9 @@ import {
 } from "react-icons/si";
 import { SiMicrosoftazure } from "react-icons/si";
 
-import { ContactForm } from "@/components/ContactForm";
-import { Button } from "@/components/Elements/Button";
-import { BlogItem } from "@/components/BlogItem";
+import { ContactForm } from "@/components/contact-form";
+import { Button } from "@/components/elements/button";
+import { BlogItem } from "@/components/blog-item";
 import { getBlogs } from "@/lib/getBlogs";
 import projects from "./(subpages)/projects/projects.json";
 
@@ -49,10 +49,6 @@ const HomePage = async () => {
           <div className="col-span-2 rounded-bl-3xl bg-primary px-8 dark:bg-transparent md:border-l-2 md:border-white md:dark:border-primary md:dark:bg-darkGray ">
             <div className="text-4xl font-bold text-white dark:text-white md:mt-24 lg:text-6xl">
               <h1 className="mb-4">I&apos;m Rohin Chopra.</h1>
-              <h1 className="mb-4"></h1>
-              <h1 className="mb-8 text-gray-200 dark:text-gray-400">
-                based in Australia
-              </h1>
               <p className="max-w-2xl text-lg font-normal dark:text-white">
                 I&apos;m incredibly passionate about solving problems, and tech
                 is my weapon of choice. I excel in architecting, designing and

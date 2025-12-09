@@ -1,4 +1,4 @@
-import { BlogItem } from "../../components/BlogItem";
+import { BlogItem } from "../../components/blog-item";
 import { getBlogs } from "../../lib/getBlogs";
 
 const BlogsPage = async () => {
