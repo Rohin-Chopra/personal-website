@@ -8,7 +8,6 @@
       "command": "/Users/rohinchopra/.local/bin/uvx",
       "args": ["awslabs.aws-diagram-mcp-server"],
       "env": {
-        "AWS_PROFILE": "margembie-labradors",
         "AWS_REGION": "ap-southeast-2",
         "FASTMCP_LOG_LEVEL": "ERROR"
       }
