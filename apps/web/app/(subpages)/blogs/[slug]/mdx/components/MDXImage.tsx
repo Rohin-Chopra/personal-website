@@ -30,8 +30,11 @@ export const MDXImage = ({ src, alt = "" }: Props) => {
     heightFromSrc = +heightParam;
   }
 
+  // Strip query string from src since we've extracted width/height
+  const cleanSrc = src.split("?")[0];
+
   const imageProps: ImageProps = {
-    src,
+    src: cleanSrc,
     alt: alt || "",
     height: heightFromSrc,
     width: widthFromSrc,
