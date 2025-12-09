@@ -24,7 +24,7 @@ export const MDXBlogBody = ({ blog }: Props) => {
             remarkPlugins: [remarkGfm, remarkFrontmatter],
             rehypePlugins: [
               [
-                rehypeHighlight as any,
+                rehypeHighlight as unknown as typeof rehypeHighlight,
                 {
                   languages: {
                     ...all,
