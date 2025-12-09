@@ -1,18 +1,20 @@
 import { readdir, readFile } from "fs/promises";
 import matter from "gray-matter";
-import { extname } from "path";
+import { extname, join } from "path";
 import { cache } from "react";
+import { cwd } from "process";
 
 import type { Blog } from "@/types";
 
 export const getBlogs = cache(async (): Promise<Blog[]> => {
-  const posts = (await readdir("./posts/")).filter((file) =>
+  const postsDirectory = join(cwd(), "posts");
+  const posts = (await readdir(postsDirectory)).filter((file) =>
     [".md", ".mdx"].includes(extname(file))
   );
 
   const postsPromises = await Promise.allSettled(
     posts.map(async (file) => {
-      const filePath = `./posts/${file}`;
+      const filePath = join(postsDirectory, file);
       const postContent = await readFile(filePath, "utf-8");
       const { data, content } = matter(postContent);
 
