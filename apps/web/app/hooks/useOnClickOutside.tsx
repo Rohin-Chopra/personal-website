@@ -1,5 +1,5 @@
 import type { RefObject } from "react";
-import { useEffect, useCallback } from "react";
+import { useEffect, useRef } from "react";
 
 type Callback = (event?: MouseEvent) => void;
 
@@ -7,7 +7,12 @@ export const useOnClickOutside = (
   ref: RefObject<HTMLDivElement>,
   callback: Callback
 ): void => {
-  const memoizedCallback = useCallback(callback, [callback]);
+  const callbackRef = useRef(callback);
+
+  // Update the ref whenever callback changes
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -15,7 +20,7 @@ export const useOnClickOutside = (
         return;
       }
 
-      memoizedCallback(event);
+      callbackRef.current(event);
     };
 
     document.addEventListener("click", handleClick);
@@ -23,5 +28,5 @@ export const useOnClickOutside = (
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [ref, memoizedCallback]);
+  }, [ref]);
 };

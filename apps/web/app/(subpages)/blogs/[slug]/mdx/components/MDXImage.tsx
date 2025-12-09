@@ -33,5 +33,5 @@ export const MDXImage = ({ src, alt = "" }: Props) => {
     width: widthFromSrc,
   };
 
-  return <Image className="mx-auto" alt={alt || ""} {...imageProps} />;
+  return <Image className="mx-auto" {...imageProps} />;
 };
