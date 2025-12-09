@@ -11,6 +11,10 @@ export const MDXImage = ({ src, alt = "" }: Props) => {
     throw new Error("src not provided");
   }
 
+  if (typeof src !== "string") {
+    throw new Error("src must be a string");
+  }
+
   let widthFromSrc = 550,
     heightFromSrc = 450;
 

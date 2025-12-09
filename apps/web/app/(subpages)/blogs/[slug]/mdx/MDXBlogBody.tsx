@@ -36,7 +36,8 @@ export const MDXBlogBody = ({ blog }: Props) => {
             ],
           },
         }}
-        components={mdxComponents}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        components={mdxComponents as any}
       />
     </div>
   );
