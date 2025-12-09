@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import clsx from "clsx";
 import { useState } from "react";
 import type { FieldValues, SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -10,6 +9,7 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 
 const API_URI = process.env.NEXT_PUBLIC_API_URI;
@@ -97,17 +97,12 @@ export const ContactForm = () => {
         <label className="mb-2 block" htmlFor="message">
           Message
         </label>
-        <textarea
-          className={clsx({
-            "bg-zinc-100 dark:bg-darkGray w-full focus:outline-none focus:border focus:border-primary py-2 px-2 transition-colors resize-none":
-              true,
-            "border border-danger": !!errors.message?.message,
-          })}
+        <Textarea
           id="message"
-          cols={20}
           rows={5}
           {...register("message")}
-        ></textarea>
+          className={errors.message?.message ? "border-danger resize-none" : "resize-none"}
+        />
         <span className="mt-1 text-danger">{errors.message?.message}</span>
       </div>
       <Button
