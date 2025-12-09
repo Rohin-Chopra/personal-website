@@ -9,7 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false next lint",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -39,6 +39,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
     "@tailwindcss/typography": "^0.5.13",
     "@types/node": "^20.14.10",
     "@types/react": "^19.2.7",
