@@ -1,5 +1,5 @@
 export type BlogParams = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };

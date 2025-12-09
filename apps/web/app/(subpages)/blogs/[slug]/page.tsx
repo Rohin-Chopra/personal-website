@@ -11,7 +11,7 @@ import { ScrollProgressBar } from "@/components/scroll-progress-bar";
 
 import "./style.css";
 
-export async function generateStaticParams(): Promise<BlogParams["params"][]> {
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const posts = await getBlogs();
 
   return posts.map((post) => {
@@ -24,7 +24,8 @@ export async function generateStaticParams(): Promise<BlogParams["params"][]> {
 export const generateMetadata = async ({
   params,
 }: BlogParams): Promise<Metadata> => {
-  const post = await getBlog(params.slug);
+  const { slug } = await params;
+  const post = await getBlog(slug);
 
   if (!post) {
     return notFound();
@@ -34,13 +35,14 @@ export const generateMetadata = async ({
     title: post.title,
     description: post.description,
     alternates: {
-      canonical: `https://www.rohinchopra.com/blogs/${params.slug}`,
+      canonical: `https://www.rohinchopra.com/blogs/${slug}`,
     },
   };
 };
 
 const BlogPage = async ({ params }: BlogParams) => {
-  const blog = await getBlog(params.slug);
+  const { slug } = await params;
+  const blog = await getBlog(slug);
 
   // TODO: add 404 page
   if (!blog) return notFound();
