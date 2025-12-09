@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  children: JSX.Element;
+  children: ReactNode;
 };
 
 export default function RootLayout({ children }: Props) {
