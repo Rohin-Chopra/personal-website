@@ -1,5 +1,1 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Temporarily disabled lint check due to Next.js 16 lint command issue
-# pnpm lint
+pnpm lint
