@@ -34,6 +34,23 @@ describe("contactHandler", () => {
       requestTimeEpoch: 1234567890,
       resourceId: "test-resource",
       resourcePath: "/contact",
+      identity: {
+        accessKey: null,
+        accountId: null,
+        apiKey: null,
+        apiKeyId: null,
+        caller: null,
+        clientCert: null,
+        cognitoAuthenticationProvider: null,
+        cognitoAuthenticationType: null,
+        cognitoIdentityId: null,
+        cognitoIdentityPoolId: null,
+        principalOrgId: null,
+        sourceIp: "127.0.0.1",
+        user: null,
+        userAgent: "test-agent",
+        userArn: null,
+      },
     },
     resource: "/contact",
   });
@@ -132,4 +149,3 @@ describe("contactHandler", () => {
     expect(body.error).toBeUndefined();
   });
 });
-
