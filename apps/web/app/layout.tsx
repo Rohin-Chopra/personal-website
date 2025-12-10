@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | Rohin Chopra",
   },
   description:
-    "Rohin Chopra is a Software Engineer who excels in architecting, designing and developing robust and scalable solutions",
+    "Rohin Chopra is a Senior Software Engineer who excels in architecting, designing and developing robust and scalable solutions",
   alternates: {
     types: {
       "application/rss+xml": "https://www.rohinchopra.com/feed.xml",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Rohin Chopra",
     description:
-      "Rohin Chopra is a Software Engineer who excels in architecting, designing and developing robust and scalable solutions",
+      "Rohin Chopra is a Senior Software Engineer who excels in architecting, designing and developing robust and scalable solutions",
     url: "https://rohinchopra.com",
     siteName: "Rohin Chopra's personal site",
     locale: "en_US",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   twitter: {
     title: "Rohin Chopra",
     description:
-      "Rohin Chopra is a Software Engineer who excels in architecting ,designing and developing robust and scalable solutions",
+      "Rohin Chopra is a Senior Software Engineer who excels in architecting ,designing and developing robust and scalable solutions",
     images: [
       "https://www.rohinchopra.com/_next/image?url=%2Fhero.png&w=640&q=75",
     ],

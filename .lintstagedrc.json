@@ -1,10 +1,7 @@
 {
   "*.{ts,tsx,js,jsx}": [
-    "eslint --fix",
+    "eslint --fix --config apps/web/.eslintrc.js",
     "prettier --write"
   ],
-  "*.{json,md,mdx,css,html,yml,yaml}": [
-    "prettier --write"
-  ]
+  "*.{json,md,mdx,css,html,yml,yaml}": ["prettier --write"]
 }
-
