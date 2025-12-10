@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MdArrowBack } from "react-icons/md";
 
 import { MDXBlogBody } from "@/(subpages)/blogs/[slug]/mdx/MDXBlogBody";
 import type { BlogParams } from "@/(subpages)/blogs/[slug]/types";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { getBlog } from "@/lib/getBlog";
 import { getBlogs } from "@/lib/getBlogs";
 import { ScrollProgressBar } from "@/components/scroll-progress-bar";
@@ -55,13 +54,12 @@ const BlogPage = async ({ params }: BlogParams) => {
           <div className="container px-4 pt-6 md:mx-auto md:flex md:flex-col md:items-center">
             <div className="self-start md:self-auto">
               <div className="lg:w-[42rem]">
-                <Link
-                  href="/blogs"
-                  passHref
-                  className="mb-4 flex items-center text-slate-800 hover:text-slate-400 dark:text-slate-400 hover:dark:text-white"
-                >
-                  <MdArrowBack className="mr-2" /> Back to blogs
-                </Link>
+                <Breadcrumbs
+                  items={[
+                    { label: "Blogs", href: "/blogs" },
+                    { label: blog.title },
+                  ]}
+                />
               </div>
             </div>
             <div className="pt-8">

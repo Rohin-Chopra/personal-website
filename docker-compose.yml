@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  # Local development services can be added here
+  # Example: LocalStack for AWS emulation
+  # localstack:
+  #   image: localstack/localstack:latest
+  #   ports:
+  #     - "4566:4566"
+  #   environment:
+  #     - SERVICES=lambda,s3,ses,apigateway
+  #     - DEBUG=1
+  #     - DATA_DIR=/tmp/localstack/data
+  #   volumes:
+  #     - "./localstack-data:/tmp/localstack"
+

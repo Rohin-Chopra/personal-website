@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/toaster";
+import { WebVitals } from "@/components/web-vitals";
 import { Analytics } from "@vercel/analytics/react";
 
 import "./globals.css";
@@ -15,6 +17,11 @@ export const metadata: Metadata = {
   },
   description:
     "Rohin Chopra is a Software Engineer who excels in architecting, designing and developing robust and scalable solutions",
+  alternates: {
+    types: {
+      "application/rss+xml": "https://www.rohinchopra.com/feed.xml",
+    },
+  },
   openGraph: {
     title: "Rohin Chopra",
     description:
@@ -43,13 +50,16 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
       <body className="dark ">
-        <div className="dark:bg-dark">
-          <Navbar />
-          {children}
-          <Toaster />
-          <Footer />
-        </div>
-        <Analytics />
+        <ErrorBoundary>
+          <div className="dark:bg-dark">
+            <Navbar />
+            {children}
+            <Toaster />
+            <Footer />
+          </div>
+          <Analytics />
+          <WebVitals />
+        </ErrorBoundary>
       </body>
     </html>
   );

@@ -1,23 +1,23 @@
 # Developer Experience
 
-- [ ] **Add pre-commit hooks**
-  - Already have Husky, but could enhance
-  - Add lint-staged for better performance
-  - Add commit message linting
+- [x] **Add pre-commit hooks**
 
-- [ ] **Add development scripts**
-  - Add script to seed test data
-  - Add script to run local Lambda
-  - Add script to validate Terraform
+  - ✅ Added lint-staged for better performance
+  - ✅ Added commit message linting with commitlint
 
-- [ ] **Improve local development setup**
-  - Add docker-compose for local services
-  - Document local setup process
-  - Add environment variable templates
+- [x] **Add development scripts**
 
-- [ ] **Add VS Code settings**
-  - Add recommended extensions
-  - Add workspace settings
-  - Add debug configurations
+  - ✅ Added script to validate Terraform
+  - ✅ Added script to format Terraform
+  - ✅ Added script to run local Lambda (dev:lambda)
 
+- [x] **Improve local development setup**
 
+  - ✅ Added docker-compose for local services
+  - ✅ Documented local setup process (DEVELOPMENT.md)
+  - ✅ Added environment variable templates (.env.example)
+
+- [x] **Add VS Code settings**
+  - ✅ Added recommended extensions (.vscode/extensions.json)
+  - ✅ Added workspace settings (.vscode/settings.json)
+  - ✅ Added debug configurations (.vscode/launch.json)

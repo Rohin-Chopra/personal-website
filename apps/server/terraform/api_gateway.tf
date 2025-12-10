@@ -37,6 +37,7 @@ resource "aws_api_gateway_method_response" "options_response" {
     "method.response.header.Access-Control-Allow-Headers" = true
     "method.response.header.Access-Control-Allow-Methods" = true
     "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Access-Control-Allow-Credentials" = true
   }
 }
 
@@ -59,9 +60,10 @@ resource "aws_api_gateway_integration_response" "options_api_integration_respons
   http_method = aws_api_gateway_method.options_method.http_method
   status_code = "200"
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'*'"
-    "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,OPTIONS'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
     "method.response.header.Access-Control-Allow-Origin"  = "'https://www.rohinchopra.com'"
+    "method.response.header.Access-Control-Allow-Credentials" = "'false'"
   }
 }
 
@@ -95,6 +97,18 @@ resource "aws_api_gateway_usage_plan" "api_usage_plan" {
   api_stages {
     api_id = aws_api_gateway_rest_api.api.id
     stage  = var.api_stage
+  }
+
+  # Rate limiting: 10 requests per second, burst of 20
+  throttle_settings {
+    rate_limit  = 10
+    burst_limit = 20
+  }
+
+  # Quota: 1000 requests per day per API key
+  quota_settings {
+    limit  = 1000
+    period = "DAY"
   }
 }
 

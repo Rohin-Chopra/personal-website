@@ -41,26 +41,65 @@ export const ContactForm = () => {
         method: "POST",
         headers: {
           "x-api-key": API_KEY as string,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          message: data.message,
+          name: data.name.trim(),
+          email: data.email.trim().toLowerCase(),
+          message: data.message.trim(),
         }),
       });
-      if (res.status !== 200) {
-        throw new Error("Received an error from the API");
+
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        // Handle validation errors from API
+        if (res.status === 400 && responseData.errors) {
+          const errorMessages = responseData.errors
+            .map((err: { field: string; message: string }) => err.message)
+            .join(", ");
+          toast({
+            title: "Validation error",
+            description: errorMessages || responseData.message || "Please check your input",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        // Handle rate limiting
+        if (res.status === 429) {
+          toast({
+            title: "Too many requests",
+            description: "Please wait a moment before trying again",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        throw new Error(responseData.message || "Received an error from the API");
       }
+
       toast({
         title: "Message sent",
         description: "Thanks for contacting me",
       });
     } catch (error) {
-      toast({
-        title: "Oops, something went wrong",
-        description: "There was a problem with your request",
-        variant: "destructive",
-      });
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      
+      // Network errors
+      if (errorMessage.includes("fetch") || errorMessage.includes("network")) {
+        toast({
+          title: "Network error",
+          description: "Please check your internet connection and try again",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Oops, something went wrong",
+          description: errorMessage || "There was a problem with your request",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }

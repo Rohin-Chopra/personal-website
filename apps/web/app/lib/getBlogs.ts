@@ -5,6 +5,7 @@ import { cache } from "react";
 import { cwd } from "process";
 
 import type { Blog } from "@/types";
+import { calculateReadingTime } from "./calculateReadingTime";
 
 export const getBlogs = cache(async (): Promise<Blog[]> => {
   const postsDirectory = join(cwd(), "posts");
@@ -18,7 +19,19 @@ export const getBlogs = cache(async (): Promise<Blog[]> => {
       const postContent = await readFile(filePath, "utf-8");
       const { data, content } = matter(postContent);
 
-      return { ...data, body: content } as Blog;
+      const readingTime = calculateReadingTime(content);
+      const tags = data.tags
+        ? Array.isArray(data.tags)
+          ? data.tags
+          : [data.tags]
+        : undefined;
+
+      return {
+        ...data,
+        body: content,
+        readingTime,
+        tags,
+      } as Blog;
     })
   );
 

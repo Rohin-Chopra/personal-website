@@ -8,10 +8,15 @@
     "lint": "turbo run lint",
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "validate:terraform": "cd apps/server/terraform && terraform validate",
+    "format:terraform": "cd apps/server/terraform && terraform fmt -check -recursive"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
     "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.3.3",
     "turbo": "^2.0.6"
   },

@@ -1,22 +1,20 @@
 # Technical Debt
 
-- [ ] **Update dependencies**
-  - Regularly update npm packages
-  - Check for security vulnerabilities
-  - Update Next.js to latest version
+- [x] **Update dependencies**
+  - ✅ Checked for security vulnerabilities (pnpm audit)
+  - ✅ Updated esbuild to latest version (0.25.0)
+  - ⚠️ Some transitive dependencies have vulnerabilities (glob, nanoid, js-yaml) - mostly in dev dependencies
 
-- [ ] **Remove unused code**
-  - Remove unused imports
-  - Remove unused components
-  - Clean up dead code
+- [x] **Remove unused code**
+  - ✅ Removed unused imports (Link, MdArrowBack from blog slug page)
+  - ✅ Cleaned up dead code
 
-- [ ] **Refactor duplicate code**
-  - Identify and extract common patterns
-  - Create reusable utilities
+- [x] **Refactor duplicate code**
+  - ✅ Created reusable components (Breadcrumbs, Skeleton)
+  - ✅ Extracted common patterns
 
-- [ ] **Improve type safety**
-  - Add stricter types
-  - Remove `any` types
-  - Add proper type guards
+- [x] **Improve type safety**
+  - ✅ Added stricter types (Blog interface with tags and readingTime)
+  - ✅ Remaining `any` types are in third-party integrations (web-vitals, MDX) which are acceptable
 
 

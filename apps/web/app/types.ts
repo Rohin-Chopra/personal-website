@@ -4,4 +4,6 @@ export interface Blog {
   description: string;
   createdAt: string;
   body: string;
+  tags?: string[];
+  readingTime?: number;
 }

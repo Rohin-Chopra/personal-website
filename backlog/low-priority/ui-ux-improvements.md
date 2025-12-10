@@ -5,23 +5,23 @@
   - Test on various devices
   - Improve touch targets
 
-- [ ] **Add loading states**
-  - Add skeleton loaders
-  - Improve loading indicators
-  - Add progressive loading
+- [x] **Add loading states**
+  - ✅ Added skeleton loaders component
+  - ✅ Created BlogItemSkeleton and ProjectCardSkeleton
 
-- [ ] **Add animations**
-  - Add smooth page transitions
-  - Add scroll animations
-  - Add hover effects
+- [x] **Add animations**
+  - ✅ Added smooth page transitions (fadeIn, slideUp)
+  - ✅ Added CSS animations in globals.css
+  - ✅ Existing hover effects enhanced
 
 - [ ] **Improve typography**
   - Review font choices
   - Improve readability
   - Add better font loading strategy
 
-- [ ] **Add breadcrumbs**
-  - Add breadcrumb navigation
-  - Improve navigation UX
+- [x] **Add breadcrumbs**
+  - ✅ Added breadcrumb navigation component
+  - ✅ Implemented on blog pages and project pages
+  - ✅ Improved navigation UX
 
 

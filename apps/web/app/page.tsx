@@ -147,54 +147,63 @@ const HomePage = async () => {
                 height={125}
                 width={125}
                 alt="AWS Cloud Practitioner Certificate"
+                loading="lazy"
               />
               <Image
                 src="/aws-certified-solutions-architect-associate.png"
                 height={125}
                 width={125}
                 alt="AWS Solutions Architect Certificate"
+                loading="lazy"
               />
               <Image
                 src="/aws-certified-developer-associate.png"
                 height={125}
                 width={125}
                 alt="AWS Developer Associate Certificate"
+                loading="lazy"
               />
               <Image
                 src="/aws-certified-sysops-administrator-associate.png"
                 height={125}
                 width={125}
                 alt="AWS SysOps Administrator Certificate"
+                loading="lazy"
               />
               <Image
                 src="/aws-certified-security-specialty.png"
                 height={125}
                 width={125}
                 alt="AWS Security Specialty Certificate"
+                loading="lazy"
               />
               <Image
                 src="/aws-certified-database-specialty.png"
                 height={125}
                 width={125}
                 alt="AWS Database Specialty Certificate"
+                loading="lazy"
               />
               <Image
                 src="/aws-certified-solutions-architect-professional.png"
                 height={125}
                 width={125}
                 alt="AWS Solutions Architect Professional"
+                loading="lazy"
               />
               <Image
                 src="/microsoft-certified-fundamentals-badge.svg"
                 height={125}
                 width={125}
                 alt="Microsoft AZ-900 Certificate"
+                loading="lazy"
               />
               <Image
                 src="/hashicorp-certified-terraform-associate-003.png"
                 height={125}
                 width={125}
                 alt="Hashicorp Terraform Associate Certificate"
+                loading="lazy"
               />
             </div>
           </div>
@@ -218,6 +227,7 @@ const HomePage = async () => {
                     alt={project.title}
                     fill
                     className="object-cover transition-transform duration-300 hover:scale-105"
+                    loading="lazy"
                   />
                 </div>
                 <div className="p-4">

@@ -38,6 +38,7 @@ export const MDXImage = ({ src, alt = "" }: Props) => {
     alt: alt || "",
     height: heightFromSrc,
     width: widthFromSrc,
+    loading: "lazy",
   };
 
   return <Image className="mx-auto" {...imageProps} />;
