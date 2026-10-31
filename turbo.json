@@ -9,9 +9,11 @@
     "build": {
       "outputs": [".next/**", "!.next/cache/**"]
     },
-    "typecheck": {},
+    "typecheck": {
+      "outputs": []
+    },
     "test": {
-      "outputs": ["coverage/**"]
+      "outputs": []
     }
   }
 }
