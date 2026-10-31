@@ -1,4 +1,7 @@
+import typography from "@tailwindcss/typography";
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
+
 const config: Config = {
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -40,10 +43,10 @@ const config: Config = {
       },
     },
     fontFamily: {
-      josefin: ["Josefin Sans", "sans-serif"],
-      roboto: ["Roboto", "sans-serif"],
+      josefin: ["var(--font-josefin)", "Josefin Sans", "sans-serif"],
+      roboto: ["var(--font-roboto)", "Roboto", "sans-serif"],
     },
   },
-  plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
+  plugins: [typography, animate],
 };
 export default config;

@@ -1,33 +1,44 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test.describe("Navigation", () => {
-  test("should navigate to different sections", async ({ page }) => {
+  test("should navigate to the blogs page from the navbar", async ({
+    page,
+  }) => {
     await page.goto("/");
-
-    // Test navigation to different sections
-    await page.getByRole("link", { name: /skills/i }).click();
-    await expect(page.locator("#skills")).toBeVisible();
-
-    await page.getByRole("link", { name: /projects/i }).click();
-    await expect(page.locator("#projects")).toBeVisible();
-
-    await page.getByRole("link", { name: /blogs/i }).click();
-    await expect(page.locator("#blogs")).toBeVisible();
-
-    await page.getByRole("link", { name: /contact/i }).click();
-    await expect(page.locator("#contact")).toBeVisible();
+    await page
+      .getByRole("banner")
+      .getByRole("link", { name: "Blogs", exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/blogs$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "My Blogs",
+    );
   });
 
-  test("should navigate to blogs page", async ({ page }) => {
+  test("should navigate to the projects page from the navbar", async ({
+    page,
+  }) => {
     await page.goto("/");
-    await page.getByRole("link", { name: /blogs/i }).click();
-    await expect(page).toHaveURL(/.*blogs/);
+    await page
+      .getByRole("banner")
+      .getByRole("link", { name: "Projects", exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/projects$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Projects",
+    );
   });
 
-  test("should navigate to projects page", async ({ page }) => {
-    await page.goto("/");
-    await page.getByRole("link", { name: /projects/i }).click();
-    await expect(page).toHaveURL(/.*projects/);
+  test("should open a blog post from the blogs page", async ({ page }) => {
+    await page.goto("/blogs");
+    await page.locator('a[href^="/blogs/"]').first().click();
+    await expect(page).toHaveURL(/\/blogs\/.+/);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
+  test("should show a 404 page for unknown routes", async ({ page }) => {
+    const response = await page.goto("/this-page-does-not-exist");
+    expect(response?.status()).toBe(404);
+    await expect(page.getByRole("link", { name: /back home/i })).toBeVisible();
   });
 });
-

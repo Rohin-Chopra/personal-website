@@ -1,10 +1,14 @@
+import { SendEmailCommand } from "@aws-sdk/client-sesv2";
 import type { APIGatewayEvent } from "aws-lambda";
 import { contactHandler } from "../handler";
 
-// Mock AWS SDK
+const mockSend = jest.fn();
+
+// The SES client is created when the handler module loads, so `send` must
+// defer to `mockSend` lazily to let individual tests control its behaviour.
 jest.mock("@aws-sdk/client-sesv2", () => ({
   SESv2Client: jest.fn().mockImplementation(() => ({
-    send: jest.fn().mockResolvedValue({}),
+    send: (...args: unknown[]) => mockSend(...args),
   })),
   SendEmailCommand: jest.fn(),
 }));
@@ -57,6 +61,7 @@ describe("contactHandler", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockSend.mockReset().mockResolvedValue({});
   });
 
   it("should return 200 for valid request", async () => {
@@ -123,16 +128,16 @@ describe("contactHandler", () => {
     const result = await contactHandler(event);
 
     expect(result.statusCode).toBe(200);
-    // The sanitized values should not contain script tags
-    expect(result.body).not.toContain("<script>");
-    expect(result.body).not.toContain("javascript:");
+    const templateData = jest
+      .mocked(SendEmailCommand)
+      .mock.calls.map(([input]) => input.Content?.Template?.TemplateData)
+      .join("\n");
+    expect(templateData).not.toContain("<script>");
+    expect(templateData).not.toContain("javascript:");
   });
 
   it("should handle errors gracefully", async () => {
-    const { SESv2Client } = require("@aws-sdk/client-sesv2");
-    SESv2Client.mockImplementation(() => ({
-      send: jest.fn().mockRejectedValue(new Error("SES error")),
-    }));
+    mockSend.mockRejectedValueOnce(new Error("SES error"));
 
     const event = createMockEvent({
       name: "Test User",

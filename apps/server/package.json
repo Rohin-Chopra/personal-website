@@ -10,7 +10,8 @@
     "test:coverage": "jest --coverage",
     "dev:lambda": "node -r ts-node/register -r tsconfig-paths/register src/handler.ts",
     "validate:terraform": "cd terraform && terraform validate",
-    "format:terraform": "cd terraform && terraform fmt -check -recursive"
+    "format:terraform": "cd terraform && terraform fmt -check -recursive",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "Rohin Chopra",

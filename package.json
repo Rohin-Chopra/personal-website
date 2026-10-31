@@ -6,9 +6,11 @@
   "packageManager": "pnpm@9.5.0",
   "scripts": {
     "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "prepare": "husky install",
+    "prepare": "husky",
     "validate:terraform": "cd apps/server/terraform && terraform validate",
     "format:terraform": "cd apps/server/terraform && terraform fmt -check -recursive"
   },

@@ -1,7 +1,8 @@
 {
-  "*.{ts,tsx,js,jsx}": [
-    "eslint --fix --config apps/web/.eslintrc.js",
+  "apps/web/**/*.{ts,tsx,js,jsx,mjs}": [
+    "pnpm --filter web exec eslint --fix",
     "prettier --write"
   ],
+  "apps/server/**/*.ts": ["prettier --write"],
   "*.{json,md,mdx,css,html,yml,yaml}": ["prettier --write"]
 }

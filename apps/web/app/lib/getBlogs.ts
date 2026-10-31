@@ -6,11 +6,12 @@ import { cwd } from "process";
 
 import type { Blog } from "@/types";
 import { calculateReadingTime } from "./calculateReadingTime";
+import { parseBlogDate } from "./parseBlogDate";
 
 export const getBlogs = cache(async (): Promise<Blog[]> => {
   const postsDirectory = join(cwd(), "posts");
   const posts = (await readdir(postsDirectory)).filter((file) =>
-    [".md", ".mdx"].includes(extname(file))
+    [".md", ".mdx"].includes(extname(file)),
   );
 
   const postsPromises = await Promise.allSettled(
@@ -32,13 +33,17 @@ export const getBlogs = cache(async (): Promise<Blog[]> => {
         readingTime,
         tags,
       } as Blog;
-    })
+    }),
   );
 
   return postsPromises
-    .filter((res) => res.status === "fulfilled")
-    .map((res) => {
-      const fulfilledResult = res as PromiseFulfilledResult<Blog>;
-      return fulfilledResult.value;
-    });
+    .filter(
+      (res): res is PromiseFulfilledResult<Blog> => res.status === "fulfilled",
+    )
+    .map((res) => res.value)
+    .sort(
+      (a, b) =>
+        parseBlogDate(b.createdAt).getTime() -
+        parseBlogDate(a.createdAt).getTime(),
+    );
 });

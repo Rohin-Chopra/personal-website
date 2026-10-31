@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { useTheme } from "@/hooks/useTheme";
 import { ThemeSwitcher } from "../theme-switcher";
 
 // Mock the useTheme hook
@@ -20,10 +21,9 @@ describe("ThemeSwitcher", () => {
 
   it("calls setTheme when theme option is clicked", async () => {
     const user = userEvent.setup();
-    const { useTheme } = require("@/hooks/useTheme");
     const mockSetTheme = jest.fn();
-    
-    useTheme.mockReturnValue({
+
+    jest.mocked(useTheme).mockReturnValue({
       theme: "dark",
       setTheme: mockSetTheme,
     });
@@ -40,4 +40,3 @@ describe("ThemeSwitcher", () => {
     expect(mockSetTheme).toHaveBeenCalledWith("light");
   });
 });
-

@@ -11,12 +11,14 @@ test.describe("Contact Form", () => {
     await expect(page.getByLabel("Name")).toBeVisible();
     await expect(page.getByLabel("Email")).toBeVisible();
     await expect(page.getByLabel("Message")).toBeVisible();
-    await expect(page.getByRole("button", { name: /let's talk/i })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /let's talk/i }),
+    ).toBeVisible();
   });
 
   test("should show validation errors for empty form", async ({ page }) => {
     await page.getByRole("button", { name: /let's talk/i }).click();
-    
+
     // Wait for validation errors
     await expect(page.getByText(/please enter a name/i)).toBeVisible();
     await expect(page.getByText(/please enter a valid email/i)).toBeVisible();
@@ -48,7 +50,7 @@ test.describe("Contact Form", () => {
     await page.getByRole("button", { name: /let's talk/i }).click();
 
     // Wait for success toast
-    await expect(page.getByText(/message sent/i)).toBeVisible();
+    await expect(page.getByText("Message sent", { exact: true })).toBeVisible();
+    await expect(page.getByLabel("Name")).toHaveValue("");
   });
 });
-
