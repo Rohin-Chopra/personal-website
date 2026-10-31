@@ -27,6 +27,7 @@ import projects from "./(subpages)/projects/projects.json";
 
 const HomePage = async () => {
   const posts = await getBlogs();
+  const recentPosts = posts.slice(0, 3);
   const featuredProjects = projects.slice(0, 3);
 
   return (
@@ -42,6 +43,7 @@ const HomePage = async () => {
                   src="/hero.png"
                   width={300}
                   height={300}
+                  priority
                 />
               </div>
             </div>
@@ -258,19 +260,23 @@ const HomePage = async () => {
             Blogs I&apos;ve written
           </h2>
           <div>
-            {posts.slice(0, 3).map((post, index) => (
+            {recentPosts.map((post, index) => (
               <div className="my-6 md:my-8" key={post.slug}>
                 <BlogItem blog={post} />
-                {index !== posts.length - 1 && (
+                {index !== recentPosts.length - 1 && (
                   <hr className="mt-6 border-t-slate-800 dark:border-t-slate-400 md:mt-8" />
                 )}
               </div>
             ))}
-            <Link href="/blogs">
-              <Button variant="default" className="mx-auto block bg-primary text-white hover:bg-primary/90">
-                View More
+            <div className="flex justify-center">
+              <Button
+                asChild
+                variant="default"
+                className="bg-primary text-white hover:bg-primary/90 dark:bg-primary dark:text-white dark:hover:bg-primary/90"
+              >
+                <Link href="/blogs">View More</Link>
               </Button>
-            </Link>
+            </div>
           </div>
         </div>
       </section>
