@@ -17,19 +17,18 @@
   "author": "Rohin Chopra",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-sesv2": "^3.614.0",
-    "zod": "^3.23.8"
+    "@aws-sdk/client-sesv2": "^3.1161.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.141",
+    "@types/aws-lambda": "^8.10.164",
     "@types/jest": "^30.0.0",
-    "@types/node": "^20.14.10",
-    "esbuild": "^0.25.0",
-    "eslint": "^8.42.0",
-    "jest": "^30.2.0",
-    "prettier": "^3.3.3",
-    "ts-jest": "^29.4.6",
+    "@types/node": "^26.6.6",
+    "esbuild": "^0.28.2",
+    "jest": "^30.5.2",
+    "prettier": "^3.9.10",
+    "ts-jest": "^29.4.15",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^6.0.3"
   }
 }

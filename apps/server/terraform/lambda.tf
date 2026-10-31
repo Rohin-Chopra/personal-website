@@ -9,7 +9,7 @@ resource "aws_lambda_function" "contact_lambda" {
   filename         = local.contact_lambda_function_zip_name
   source_code_hash = data.archive_file.contact_lambda_package.output_base64sha256
   handler          = "index.contactHandler"
-  runtime          = "nodejs16.x"
+  runtime          = "nodejs26.x"
   publish          = "true"
   role             = aws_iam_role.contact_lambda_role.arn
   environment {

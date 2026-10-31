@@ -23,7 +23,7 @@ export const ScrollProgressBar = () => {
   }, []);
 
   return (
-    <div className="fixed left-0 top-24 z-40 mb-4 h-1 w-full rounded-none bg-slate-100 dark:bg-slate-800">
+    <div className="fixed top-24 left-0 z-40 mb-4 h-1 w-full rounded-none bg-slate-100 dark:bg-slate-800">
       <div
         className="z-50 h-full bg-dark dark:bg-primary"
         style={{
@@ -33,5 +33,3 @@ export const ScrollProgressBar = () => {
     </div>
   );
 };
-
-

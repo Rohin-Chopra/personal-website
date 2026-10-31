@@ -1,30 +1,100 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-html {
-  scroll-behavior: smooth;
-}
+@plugin '@tailwindcss/typography';
+@plugin 'tailwindcss-animate';
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+@custom-variant dark (&:is(.dark *));
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
   }
 }
 
-.prose
-  :where(h5 + *, h6 + *):not(
-    :where([class~="not-prose"], [class~="not-prose"] *)
-  ) {
-  @apply mt-0;
+@theme {
+  --font-*: initial;
+  --font-josefin: var(--next-font-josefin), Josefin Sans, sans-serif;
+  --font-roboto: var(--next-font-roboto), Roboto, sans-serif;
+
+  --color-dark: #000000;
+  --color-darkGray: #181823;
+  --color-primary: #5221e6;
+  --color-danger: #dc3545;
+  --color-dracula: #282a36;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0px;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0px;
+    }
+  }
 }
 
-/* Smooth page transitions */
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility page-transition {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@utility slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
 @layer utilities {
-  .page-transition {
-    animation: fadeIn 0.3s ease-in-out;
+  html {
+    scroll-behavior: smooth;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  .prose
+    :where(h5 + *, h6 + *):not(
+      :where([class~="not-prose"], [class~="not-prose"] *)
+    ) {
+    @apply mt-0;
+  }
+
+  /* Smooth page transitions */
+}
+@layer utilities {
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -34,10 +104,6 @@ html {
       opacity: 1;
       transform: translateY(0);
     }
-  }
-
-  .slide-up {
-    animation: slideUp 0.5s ease-out;
   }
 
   @keyframes slideUp {

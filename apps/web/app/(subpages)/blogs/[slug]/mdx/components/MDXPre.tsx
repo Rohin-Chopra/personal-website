@@ -36,7 +36,7 @@ export const MDXPre = ({
     <pre className="relative bg-dracula" {...props} ref={ref}>
       <div className="relative">
         <div
-          className="absolute right-0 pl-2 pr-4 text-xl transition-all duration-300"
+          className="absolute right-0 pr-4 pl-2 text-xl transition-all duration-300"
           onClick={handleClick}
         >
           <div>

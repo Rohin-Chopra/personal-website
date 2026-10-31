@@ -16,7 +16,7 @@ export function BlogAlert({
   return (
     <Alert
       {...props}
-      className="border-y-0 border-l-4 border-r-0 border-l-primary bg-darkGray"
+      className="border-y-0 border-r-0 border-l-4 border-l-primary bg-darkGray"
     >
       {children}
     </Alert>

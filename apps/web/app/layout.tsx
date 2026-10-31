@@ -16,14 +16,14 @@ import "./globals.css";
 const josefin = Josefin_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
-  variable: "--font-josefin",
+  variable: "--next-font-josefin",
   display: "swap",
 });
 
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "700"],
-  variable: "--font-roboto",
+  variable: "--next-font-roboto",
   display: "swap",
 });
 
@@ -81,7 +81,7 @@ export default function RootLayout({ children }: Props) {
       <body>
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:rounded-sm focus:bg-white focus:px-4 focus:py-2 focus:text-black"
         >
           Skip to content
         </a>

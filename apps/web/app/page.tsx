@@ -17,7 +17,7 @@ import {
   SiTypescript,
   SiVercel,
 } from "react-icons/si";
-import { SiMicrosoftazure } from "react-icons/si";
+import { VscAzure } from "react-icons/vsc";
 
 import { ContactForm } from "@/components/contact-form";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ const HomePage = async () => {
   return (
     <>
       <section id="hero" className="md:h-[90vh]">
-        <div className="flex h-full flex-col-reverse justify-end bg-primary dark:bg-dark md:grid md:grid-cols-3 md:bg-white md:py-0">
+        <div className="flex h-full flex-col-reverse justify-end bg-primary md:grid md:grid-cols-3 md:bg-white md:py-0 dark:bg-dark">
           <div className="relative">
             <div className="flex justify-center md:justify-end">
               <div className="-right-6 z-10 mt-12 md:absolute">
@@ -48,8 +48,8 @@ const HomePage = async () => {
               </div>
             </div>
           </div>
-          <div className="col-span-2 rounded-bl-3xl bg-primary px-8 dark:bg-transparent md:border-l-2 md:border-white md:dark:border-primary md:dark:bg-darkGray ">
-            <div className="text-4xl font-bold text-white dark:text-white md:mt-24 lg:text-6xl">
+          <div className="col-span-2 rounded-bl-3xl bg-primary px-8 md:border-l-2 md:border-white dark:bg-transparent md:dark:border-primary md:dark:bg-darkGray ">
+            <div className="text-4xl font-bold text-white md:mt-24 lg:text-6xl dark:text-white">
               <h1 className="mb-4">I&apos;m Rohin Chopra.</h1>
               <p className="max-w-2xl text-lg font-normal dark:text-white">
                 I&apos;m incredibly passionate about solving problems, and tech
@@ -58,7 +58,7 @@ const HomePage = async () => {
               </p>
               <Link
                 href="#contact"
-                className="mt-4 inline-block w-full cursor-pointer rounded border-solid bg-white px-8 py-4 text-center text-base text-black shadow dark:bg-primary dark:text-white md:w-auto md:dark:bg-primary"
+                className="mt-4 inline-block w-full cursor-pointer rounded-sm border-solid bg-white px-8 py-4 text-center text-base text-black shadow-sm md:w-auto dark:bg-primary dark:text-white md:dark:bg-primary"
               >
                 Say Hello
               </Link>
@@ -66,9 +66,9 @@ const HomePage = async () => {
           </div>
         </div>
       </section>
-      <section id="skills" className="py-8 dark:text-white md:px-6">
+      <section id="skills" className="py-8 md:px-6 dark:text-white">
         <div className="container mx-auto">
-          <h2 className="mb-2 mt-4 text-2xl font-bold md:text-4xl">Skills</h2>
+          <h2 className="mt-4 mb-2 text-2xl font-bold md:text-4xl">Skills</h2>
           <div className="mb-12">
             <h3 className="mb-4 text-xl font-semibold opacity-80">
               Languages And Frameworks
@@ -127,7 +127,7 @@ const HomePage = async () => {
             <h3 className="mb-4 text-xl font-semibold opacity-80">Services</h3>
             <div className="grid grid-cols-2 justify-items-center gap-y-4 text-6xl md:grid-cols-8">
               <FaAws title="AWS" />
-              <SiMicrosoftazure
+              <VscAzure
                 title="Azure"
                 className="transition-colors duration-300 hover:text-[#008AD7]"
               />
@@ -212,9 +212,9 @@ const HomePage = async () => {
         </div>
       </section>
 
-      <section id="projects" className="py-8 dark:text-white md:px-6">
+      <section id="projects" className="py-8 md:px-6 dark:text-white">
         <div className="container mx-auto">
-          <h2 className="mb-2 mt-4 text-2xl font-bold md:text-4xl">
+          <h2 className="mt-4 mb-2 text-2xl font-bold md:text-4xl">
             Featured Projects
           </h2>
           <div className="grid gap-6 md:grid-cols-3">
@@ -254,7 +254,7 @@ const HomePage = async () => {
         </div>
       </section>
 
-      <section id="blogs" className="py-8 dark:text-white md:px-6">
+      <section id="blogs" className="py-8 md:px-6 dark:text-white">
         <div className="container mx-auto">
           <h2 className="mt-4 text-2xl font-bold md:mb-2 md:text-4xl">
             Blogs I&apos;ve written
@@ -264,7 +264,7 @@ const HomePage = async () => {
               <div className="my-6 md:my-8" key={post.slug}>
                 <BlogItem blog={post} />
                 {index !== recentPosts.length - 1 && (
-                  <hr className="mt-6 border-t-slate-800 dark:border-t-slate-400 md:mt-8" />
+                  <hr className="mt-6 border-t-slate-800 md:mt-8 dark:border-t-slate-400" />
                 )}
               </div>
             ))}
@@ -280,7 +280,7 @@ const HomePage = async () => {
           </div>
         </div>
       </section>
-      <section id="contact" className="py-8 dark:text-white md:px-6">
+      <section id="contact" className="py-8 md:px-6 dark:text-white">
         <div className="container mx-auto">
           <div className="md:grid md:grid-cols-2">
             <div className="mb-4 md:mb-0">

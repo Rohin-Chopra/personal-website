@@ -7,6 +7,9 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const tailwindRecommended =
+  tailwind.configs["flat/recommended"] ?? tailwind.configs.recommended;
+
 const eslintConfig = [
   {
     ignores: [
@@ -20,7 +23,7 @@ const eslintConfig = [
   },
   ...nextCoreWebVitals,
   ...nextTypescript,
-  ...tailwind.configs["flat/recommended"],
+  ...[tailwindRecommended].flat(),
   prettier,
   {
     rules: {
@@ -28,7 +31,7 @@ const eslintConfig = [
     },
     settings: {
       tailwindcss: {
-        config: path.join(__dirname, "tailwind.config.ts"),
+        cssConfigPath: path.join(__dirname, "app/globals.css"),
       },
     },
   },

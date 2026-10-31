@@ -18,13 +18,13 @@ export default function NotFound() {
       <div className="mt-8 flex gap-4">
         <Link
           href="/"
-          className="rounded bg-primary px-6 py-3 font-medium text-white hover:bg-primary/90"
+          className="rounded-sm bg-primary px-6 py-3 font-medium text-white hover:bg-primary/90"
         >
           Back home
         </Link>
         <Link
           href="/blogs"
-          className="rounded border border-primary px-6 py-3 font-medium hover:bg-primary/10"
+          className="rounded-sm border border-primary px-6 py-3 font-medium hover:bg-primary/10"
         >
           Read the blog
         </Link>
