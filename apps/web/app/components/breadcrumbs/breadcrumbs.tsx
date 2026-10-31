@@ -18,13 +18,14 @@ export const Breadcrumbs = ({ items }: Props) => {
     >
       <Link
         href="/"
+        aria-label="Home"
         className="flex items-center hover:text-primary dark:hover:text-primary"
       >
-        <MdHome className="h-4 w-4" />
+        <MdHome className="size-4" aria-hidden />
       </Link>
       {items.map((item, index) => (
         <div key={item.label} className="flex items-center space-x-2">
-          <MdChevronRight className="h-4 w-4" />
+          <MdChevronRight className="size-4" aria-hidden />
           {item.href && index < items.length - 1 ? (
             <Link
               href={item.href}
@@ -33,11 +34,12 @@ export const Breadcrumbs = ({ items }: Props) => {
               {item.label}
             </Link>
           ) : (
-            <span className="text-gray-900 dark:text-white">{item.label}</span>
+            <span className="text-gray-900 dark:text-white" aria-current="page">
+              {item.label}
+            </span>
           )}
         </div>
       ))}
     </nav>
   );
 };
-
