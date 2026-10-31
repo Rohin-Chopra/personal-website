@@ -29,9 +29,7 @@ export const BlogSearch = ({ blogs, onFilterChange }: Props) => {
 
     // Filter by tag
     if (selectedTag) {
-      filtered = filtered.filter(
-        (blog) => blog.tags?.includes(selectedTag)
-      );
+      filtered = filtered.filter((blog) => blog.tags?.includes(selectedTag));
     }
 
     // Filter by search query
@@ -41,7 +39,7 @@ export const BlogSearch = ({ blogs, onFilterChange }: Props) => {
         (blog) =>
           blog.title.toLowerCase().includes(query) ||
           blog.description.toLowerCase().includes(query) ||
-          blog.tags?.some((tag) => tag.toLowerCase().includes(query))
+          blog.tags?.some((tag) => tag.toLowerCase().includes(query)),
       );
     }
 
@@ -57,13 +55,13 @@ export const BlogSearch = ({ blogs, onFilterChange }: Props) => {
     <div className="mb-8 space-y-4">
       {/* Search Input */}
       <div className="relative">
-        <MdSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+        <MdSearch className="absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-400" />
         <input
           type="text"
           placeholder="Search blogs..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 bg-white px-10 py-2 text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary dark:border-gray-600 dark:bg-darkGray dark:text-white"
+          className="w-full rounded-lg border border-gray-300 bg-white px-10 py-2 text-gray-900 focus:border-primary focus:ring-2 focus:ring-primary focus:outline-hidden dark:border-gray-600 dark:bg-darkGray dark:text-white"
         />
       </div>
 
@@ -98,9 +96,9 @@ export const BlogSearch = ({ blogs, onFilterChange }: Props) => {
 
       {/* Results count */}
       <p className="text-sm text-gray-600 dark:text-gray-400">
-        {filteredBlogs.length} {filteredBlogs.length === 1 ? "post" : "posts"} found
+        {filteredBlogs.length} {filteredBlogs.length === 1 ? "post" : "posts"}{" "}
+        found
       </p>
     </div>
   );
 };
-

@@ -34,9 +34,9 @@ resource "aws_api_gateway_method_response" "options_response" {
     "application/json" = "Empty"
   }
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = true
-    "method.response.header.Access-Control-Allow-Methods" = true
-    "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Access-Control-Allow-Headers"     = true
+    "method.response.header.Access-Control-Allow-Methods"     = true
+    "method.response.header.Access-Control-Allow-Origin"      = true
     "method.response.header.Access-Control-Allow-Credentials" = true
   }
 }
@@ -60,9 +60,9 @@ resource "aws_api_gateway_integration_response" "options_api_integration_respons
   http_method = aws_api_gateway_method.options_method.http_method
   status_code = "200"
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'https://www.rohinchopra.com'"
+    "method.response.header.Access-Control-Allow-Headers"     = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods"     = "'POST,OPTIONS'"
+    "method.response.header.Access-Control-Allow-Origin"      = "'https://www.rohinchopra.com'"
     "method.response.header.Access-Control-Allow-Credentials" = "'false'"
   }
 }
@@ -86,9 +86,21 @@ resource "aws_api_gateway_integration" "api_lambda_integration" {
 
 resource "aws_api_gateway_deployment" "api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name  = var.api_stage
 
   depends_on = [aws_api_gateway_integration.api_lambda_integration]
+}
+
+resource "aws_api_gateway_stage" "api_stage" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  deployment_id = aws_api_gateway_deployment.api_deployment.id
+  stage_name    = var.api_stage
+}
+
+# AWS provider v6 dropped aws_api_gateway_deployment.stage_name; adopt the
+# stage that the deployment previously created instead of recreating it.
+import {
+  to = aws_api_gateway_stage.api_stage
+  id = "${aws_api_gateway_rest_api.api.id}/${var.api_stage}"
 }
 
 resource "aws_api_gateway_usage_plan" "api_usage_plan" {
@@ -96,7 +108,7 @@ resource "aws_api_gateway_usage_plan" "api_usage_plan" {
 
   api_stages {
     api_id = aws_api_gateway_rest_api.api.id
-    stage  = var.api_stage
+    stage  = aws_api_gateway_stage.api_stage.stage_name
   }
 
   # Rate limiting: 10 requests per second, burst of 20
@@ -131,7 +143,7 @@ resource "aws_api_gateway_domain_name" "api_domain_name" {
 resource "aws_api_gateway_base_path_mapping" "api_base_path_mapping" {
   domain_name = aws_acm_certificate.api_certificate.domain_name
   api_id      = aws_api_gateway_rest_api.api.id
-  stage_name  = var.api_stage
+  stage_name  = aws_api_gateway_stage.api_stage.stage_name
 
   depends_on = [aws_api_gateway_domain_name.api_domain_name]
 }

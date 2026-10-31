@@ -27,16 +27,14 @@ const Navbar = () => {
       <nav aria-label="Main">
         <div
           className={clsx({
-            "flex h-24 w-full items-center justify-between bg-primary px-8 py-2 dark:bg-dark md:grid md:grid-cols-3 md:items-stretch md:p-0":
-              true,
-            "fixed  left-0 top-0 z-50": pathname.includes("/blogs/"),
+            "flex h-24 w-full items-center justify-between bg-primary px-8 py-2 md:grid md:grid-cols-3 md:items-stretch md:p-0 dark:bg-dark": true,
+            "fixed  top-0 left-0 z-50": pathname.includes("/blogs/"),
           })}
         >
           <Link
             className={clsx({
-              "py-8 text-xl font-bold text-white dark:text-white md:pl-8 font-josefin":
-                true,
-              "md:bg-white dark:bg-dark md:text-black": pathname === "/",
+              "py-8 font-josefin text-xl font-bold text-white md:pl-8 dark:text-white": true,
+              "md:bg-white md:text-black dark:bg-dark": pathname === "/",
             })}
             href="/"
             passHref
@@ -45,8 +43,7 @@ const Navbar = () => {
           </Link>
           <div
             className={clsx({
-              "text-white md:col-span-2 md:pr-16 flex md:justify-end items-center bg-primary dark:bg-dark":
-                true,
+              "flex items-center bg-primary text-white md:col-span-2 md:justify-end md:pr-16 dark:bg-dark": true,
               "md:border-l-2 md:border-l-white md:dark:border-l-primary md:dark:bg-darkGray":
                 pathname === "/",
             })}
@@ -86,7 +83,7 @@ const Navbar = () => {
                 aria-describedby={undefined}
               >
                 <SheetTitle className="sr-only">Navigation menu</SheetTitle>
-                <div className="mb-1 mt-24">
+                <div className="mt-24 mb-1">
                   <Link onClick={close} href="/">
                     About
                   </Link>

@@ -14,7 +14,7 @@ export const BlogsClient = ({ initialBlogs }: Props) => {
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(initialBlogs);
 
   return (
-    <div className="min-h-screen pt-4 dark:text-white md:pt-10">
+    <div className="min-h-screen pt-4 md:pt-10 dark:text-white">
       <div className="container px-8">
         <h1 className="mb-4 text-3xl font-bold md:text-4xl">My Blogs</h1>
         <BlogSearch blogs={initialBlogs} onFilterChange={setFilteredBlogs} />
@@ -27,7 +27,7 @@ export const BlogsClient = ({ initialBlogs }: Props) => {
             <div className="my-6 md:my-8" key={post.slug}>
               <BlogItem blog={post} />
               {index !== filteredBlogs.length - 1 && (
-                <hr className="mt-6 border-t-slate-800 dark:border-t-slate-400 md:mt-8" />
+                <hr className="mt-6 border-t-slate-800 md:mt-8 dark:border-t-slate-400" />
               )}
             </div>
           ))
@@ -36,4 +36,3 @@ export const BlogsClient = ({ initialBlogs }: Props) => {
     </div>
   );
 };
-

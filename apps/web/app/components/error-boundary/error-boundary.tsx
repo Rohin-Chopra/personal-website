@@ -44,9 +44,10 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="max-w-md text-center">
             <h1 className="mb-4 text-2xl font-bold">Something went wrong</h1>
             <p className="mb-6 text-gray-600 dark:text-gray-400">
-              We encountered an unexpected error. Please try refreshing the page.
+              We encountered an unexpected error. Please try refreshing the
+              page.
             </p>
-            <div className="flex gap-4 justify-center">
+            <div className="flex justify-center gap-4">
               <Button
                 onClick={() => {
                   this.setState({ hasError: false, error: undefined });
@@ -70,7 +71,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 <summary className="cursor-pointer text-sm text-gray-500">
                   Error Details (Development Only)
                 </summary>
-                <pre className="mt-2 overflow-auto rounded bg-gray-100 p-4 text-xs dark:bg-gray-800">
+                <pre className="mt-2 overflow-auto rounded-sm bg-gray-100 p-4 text-xs dark:bg-gray-800">
                   {this.state.error.toString()}
                   {this.state.error.stack}
                 </pre>
@@ -84,4 +85,3 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
-

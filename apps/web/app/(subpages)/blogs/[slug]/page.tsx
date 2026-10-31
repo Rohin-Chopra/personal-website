@@ -87,7 +87,7 @@ const BlogPage = async ({ params }: BlogParams) => {
         <header id="gradientBackgroundHeader">
           <div className="container px-4 pt-6 md:mx-auto md:flex md:flex-col md:items-center">
             <div className="self-start md:self-auto">
-              <div className="lg:w-[42rem]">
+              <div className="lg:w-2xl">
                 <Breadcrumbs
                   items={[
                     { label: "Blogs", href: "/blogs" },
@@ -97,7 +97,7 @@ const BlogPage = async ({ params }: BlogParams) => {
               </div>
             </div>
             <div className="pt-8">
-              <div className="lg:w-[42rem]">
+              <div className="lg:w-2xl">
                 <p className="mb-4 dark:text-slate-400">
                   <time dateTime={publishedAt.toISOString()}>
                     {blog.createdAt}
@@ -112,9 +112,9 @@ const BlogPage = async ({ params }: BlogParams) => {
             </div>
           </div>
         </header>
-        <div className="container px-4 pb-8 pt-2 md:mx-auto md:flex md:justify-center">
+        <div className="container px-4 pt-2 pb-8 md:mx-auto md:flex md:justify-center">
           <div>
-            <div className="lg:w-[42rem]">
+            <div className="lg:w-2xl">
               <MDXBlogBody blog={blog} />
             </div>
           </div>

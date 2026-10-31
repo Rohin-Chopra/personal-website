@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "author": "Rohin Chopra",
-  "packageManager": "pnpm@9.5.0",
+  "packageManager": "pnpm@10.34.9",
   "scripts": {
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
@@ -15,13 +15,16 @@
     "format:terraform": "cd apps/server/terraform && terraform fmt -check -recursive"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.2.0",
-    "@commitlint/config-conventional": "^20.2.0",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
-    "prettier": "^3.3.3",
-    "turbo": "^2.0.6"
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "turbo": "^2.11.10"
   },
   "keywords": [],
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "node": ">=26"
+  }
 }

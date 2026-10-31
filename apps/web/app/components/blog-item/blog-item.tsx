@@ -18,7 +18,7 @@ export const BlogItem = ({ blog }: Props) => {
         <p>{blog.createdAt}</p>
         {blog.readingTime && (
           <div className="flex items-center gap-1">
-            <MdAccessTime className="h-4 w-4" />
+            <MdAccessTime className="size-4" />
             <span>{blog.readingTime} min read</span>
           </div>
         )}
@@ -42,7 +42,3 @@ export const BlogItem = ({ blog }: Props) => {
     </Link>
   );
 };
-
-
-
-

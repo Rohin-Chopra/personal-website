@@ -24,7 +24,7 @@ const sanitizeString = (str: string): string => {
 const sendTemplatedEmail = async (
   toAddress: string,
   templateName: string,
-  templateData: Record<string, unknown>
+  templateData: Record<string, unknown>,
 ): Promise<void> => {
   await sesClient.send(
     new SendEmailCommand({
@@ -38,17 +38,21 @@ const sendTemplatedEmail = async (
           TemplateData: JSON.stringify(templateData),
         },
       },
-    })
+    }),
   );
 };
 
 export const contactHandler = async (
-  event: APIGatewayEvent
+  event: APIGatewayEvent,
 ): Promise<APIGatewayProxyResult> => {
   const requestId = event.requestContext.requestId;
   const timestamp = new Date().toISOString();
 
-  const log = (level: string, message: string, data?: Record<string, unknown>) => {
+  const log = (
+    level: string,
+    message: string,
+    data?: Record<string, unknown>,
+  ) => {
     const logEntry = {
       level,
       timestamp,
@@ -71,7 +75,9 @@ export const contactHandler = async (
     try {
       body = JSON.parse(event.body || "{}");
     } catch (parseError) {
-      log("error", "Failed to parse request body", { error: String(parseError) });
+      log("error", "Failed to parse request body", {
+        error: String(parseError),
+      });
       return {
         statusCode: 400,
         headers: corsHeaders,
@@ -81,13 +87,15 @@ export const contactHandler = async (
 
     const validationResult = schema.safeParse(body);
     if (!validationResult.success) {
-      log("warn", "Validation failed", { errors: validationResult.error.errors });
+      log("warn", "Validation failed", {
+        errors: validationResult.error.issues,
+      });
       return {
         statusCode: 400,
         headers: corsHeaders,
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           message: "Invalid request",
-          errors: validationResult.error.errors.map(e => ({
+          errors: validationResult.error.issues.map((e) => ({
             field: e.path.join("."),
             message: e.message,
           })),
@@ -100,7 +108,7 @@ export const contactHandler = async (
     const sanitizedName = sanitizeString(name);
     const sanitizedMessage = sanitizeString(message);
 
-    log("info", "Processing contact form submission", { 
+    log("info", "Processing contact form submission", {
       email: email.substring(0, 3) + "***", // Partial email for logging
     });
 
@@ -112,7 +120,7 @@ export const contactHandler = async (
         NAME: sanitizedName,
         EMAIL: email,
         MESSAGE: sanitizedMessage,
-      }
+      },
     );
 
     // Send email to the user confirming that I have received their email
@@ -130,7 +138,8 @@ export const contactHandler = async (
       }),
     };
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     const errorStack = error instanceof Error ? error.stack : undefined;
 
     log("error", "Contact handler error", {

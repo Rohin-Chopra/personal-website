@@ -41,7 +41,7 @@ const ProjectsClient: React.FC<Props> = ({ projects }) => {
     // Filter by technology
     if (selectedTech) {
       filtered = filtered.filter((project) =>
-        project.technologies?.includes(selectedTech)
+        project.technologies?.includes(selectedTech),
       );
     }
 
@@ -53,8 +53,8 @@ const ProjectsClient: React.FC<Props> = ({ projects }) => {
           project.title.toLowerCase().includes(query) ||
           project.description?.toLowerCase().includes(query) ||
           project.technologies?.some((tech) =>
-            tech.toLowerCase().includes(query)
-          )
+            tech.toLowerCase().includes(query),
+          ),
       );
     }
 
@@ -65,7 +65,7 @@ const ProjectsClient: React.FC<Props> = ({ projects }) => {
     <div className="min-h-screen bg-white py-16 dark:bg-dark dark:text-white">
       <div className="container mx-auto px-4 lg:px-8">
         <Breadcrumbs items={[{ label: "Projects" }]} />
-        <h1 className="mb-2 mt-4 text-4xl font-bold">Projects</h1>
+        <h1 className="mt-4 mb-2 text-4xl font-bold">Projects</h1>
         <p className="mb-8 max-w-2xl text-lg text-gray-600 dark:text-gray-300">
           A collection of projects I&apos;ve built in my spare time, showcasing
           my skills in web development, UI/UX design, and problem-solving.
@@ -75,13 +75,13 @@ const ProjectsClient: React.FC<Props> = ({ projects }) => {
         <div className="mb-8 space-y-4">
           {/* Search Input */}
           <div className="relative">
-            <MdSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+            <MdSearch className="absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search projects..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-10 py-2 text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary dark:border-gray-600 dark:bg-darkGray dark:text-white"
+              className="w-full rounded-lg border border-gray-300 bg-white px-10 py-2 text-gray-900 focus:border-primary focus:ring-2 focus:ring-primary focus:outline-hidden dark:border-gray-600 dark:bg-darkGray dark:text-white"
             />
           </div>
 
@@ -193,4 +193,3 @@ const ProjectsClient: React.FC<Props> = ({ projects }) => {
 };
 
 export default ProjectsClient;
-
