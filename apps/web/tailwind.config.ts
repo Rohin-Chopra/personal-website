@@ -43,8 +43,8 @@ const config: Config = {
       },
     },
     fontFamily: {
-      josefin: ["Josefin Sans", "sans-serif"],
-      roboto: ["Roboto", "sans-serif"],
+      josefin: ["var(--font-josefin)", "Josefin Sans", "sans-serif"],
+      roboto: ["var(--font-roboto)", "Roboto", "sans-serif"],
     },
   },
   plugins: [typography, animate],
