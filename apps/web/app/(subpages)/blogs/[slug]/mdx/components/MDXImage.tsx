@@ -1,4 +1,3 @@
-import type { ImageProps } from "next/image";
 import Image from "next/image";
 
 type Props = React.DetailedHTMLProps<
@@ -33,13 +32,14 @@ export const MDXImage = ({ src, alt = "" }: Props) => {
   // Strip query string from src since we've extracted width/height
   const cleanSrc = src.split("?")[0];
 
-  const imageProps: ImageProps = {
-    src: cleanSrc,
-    alt: alt || "",
-    height: heightFromSrc,
-    width: widthFromSrc,
-    loading: "lazy",
-  };
-
-  return <Image className="mx-auto" {...imageProps} />;
+  return (
+    <Image
+      className="mx-auto"
+      src={cleanSrc}
+      alt={alt}
+      height={heightFromSrc}
+      width={widthFromSrc}
+      loading="lazy"
+    />
+  );
 };

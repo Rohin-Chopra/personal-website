@@ -8,6 +8,10 @@
     "lint": {},
     "build": {
       "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "typecheck": {},
+    "test": {
+      "outputs": ["coverage/**"]
     }
   }
 }
