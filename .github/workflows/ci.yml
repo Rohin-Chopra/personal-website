@@ -186,8 +186,10 @@ jobs:
         run: |
           # Hashed assets never change; HTML revalidates and is invalidated below.
           aws s3 sync assets "s3://$BUCKET/assets" --cache-control "public, max-age=31536000, immutable"
+          # Images, feeds, icons: same URL across deploys, so browsers revalidate
+          # (cheap 304s) and updates show up immediately.
           aws s3 sync . "s3://$BUCKET" --exclude "assets/*" --exclude "*.html" \
-            --cache-control "public, max-age=3600, s-maxage=86400"
+            --cache-control "public, max-age=0, s-maxage=31536000, must-revalidate"
           # --delete only touches the included HTML, so removed pages go away
           # while old hashed assets stay for tabs still running the last build.
           aws s3 sync . "s3://$BUCKET" --exclude "*" --include "*.html" --delete \
