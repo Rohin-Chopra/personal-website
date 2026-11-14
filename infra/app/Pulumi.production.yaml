@@ -6,6 +6,6 @@ config:
     tags:
       Project: personal-website
       ManagedBy: pulumi
-  personal-website-app:contactApiEnabled: "false"
+  personal-website-app:contactApiEnabled: "true"
   personal-website-app:adminEmail:
     secure: v1:0Yg7GmDczs8PM1jD:y77lrm6Gv8GMhBhVPQT8jwUv+UmWpj0C5xeeWn3ACNTndA+pSadb6Y4=
