@@ -17,7 +17,8 @@ resource "aws_lambda_function" "contact_lambda" {
       ADMIN_EMAIL                = var.admin_email
       NO_REPLY_EMAIL             = var.no_reply_email
       NOTIFY_EMAIL_TEMPLATE_NAME = aws_ses_template.contact_notify_template.name
-      REPLY_EMAIL_TEMPLATE_NAME  = aws_ses_template.contact_reply_template.name
+      SES_CONFIGURATION_SET_NAME = aws_sesv2_configuration_set.contact.configuration_set_name
+      TURNSTILE_SECRET_KEY       = var.turnstile_secret_key
     }
   }
 

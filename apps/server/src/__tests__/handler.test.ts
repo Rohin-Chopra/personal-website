@@ -1,5 +1,6 @@
 import { SendEmailCommand } from "@aws-sdk/client-sesv2";
 import type { APIGatewayEvent } from "aws-lambda";
+import { config } from "../config";
 import { contactHandler } from "../handler";
 
 const mockSend = jest.fn();
@@ -152,5 +153,107 @@ describe("contactHandler", () => {
     expect(body.message).toBe("Internal Server Error");
     // Should not expose internal error details
     expect(body.error).toBeUndefined();
+  });
+
+  it("only emails the site owner, with the sender as reply-to", async () => {
+    config.adminEmail = "owner@example.com";
+    const event = createMockEvent({
+      name: "Test User",
+      email: "test@example.com",
+      message: "Test message",
+    });
+
+    await contactHandler(event);
+
+    expect(mockSend).toHaveBeenCalledTimes(1);
+    const [[input]] = jest.mocked(SendEmailCommand).mock.calls;
+    expect(input.Destination?.ToAddresses).toEqual(["owner@example.com"]);
+    expect(input.ReplyToAddresses).toEqual(["test@example.com"]);
+  });
+
+  it("silently drops submissions that fill in the honeypot", async () => {
+    const event = createMockEvent({
+      name: "Bot",
+      email: "bot@example.com",
+      message: "Spam",
+      website: "https://spam.example.com",
+    });
+
+    const result = await contactHandler(event);
+
+    expect(result.statusCode).toBe(200);
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  describe("with Turnstile enabled", () => {
+    const fetchMock = jest.fn();
+    const originalFetch = global.fetch;
+
+    beforeEach(() => {
+      config.turnstileSecretKey = "secret";
+      fetchMock.mockReset();
+      global.fetch = fetchMock as unknown as typeof fetch;
+    });
+
+    afterEach(() => {
+      config.turnstileSecretKey = undefined;
+      global.fetch = originalFetch;
+    });
+
+    it("rejects requests without a token", async () => {
+      const result = await contactHandler(
+        createMockEvent({
+          name: "Test User",
+          email: "test@example.com",
+          message: "Test message",
+        }),
+      );
+
+      expect(result.statusCode).toBe(403);
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(mockSend).not.toHaveBeenCalled();
+    });
+
+    it("rejects tokens that fail verification", async () => {
+      fetchMock.mockResolvedValue({
+        ok: true,
+        json: async () => ({ success: false }),
+      });
+
+      const result = await contactHandler(
+        createMockEvent({
+          name: "Test User",
+          email: "test@example.com",
+          message: "Test message",
+          turnstileToken: "bad-token",
+        }),
+      );
+
+      expect(result.statusCode).toBe(403);
+      expect(mockSend).not.toHaveBeenCalled();
+    });
+
+    it("sends the email when the token is valid", async () => {
+      fetchMock.mockResolvedValue({
+        ok: true,
+        json: async () => ({ success: true }),
+      });
+
+      const result = await contactHandler(
+        createMockEvent({
+          name: "Test User",
+          email: "test@example.com",
+          message: "Test message",
+          turnstileToken: "good-token",
+        }),
+      );
+
+      expect(result.statusCode).toBe(200);
+      const body = fetchMock.mock.calls[0][1].body as URLSearchParams;
+      expect(body.get("secret")).toBe("secret");
+      expect(body.get("response")).toBe("good-token");
+      expect(body.get("remoteip")).toBe("127.0.0.1");
+      expect(mockSend).toHaveBeenCalledTimes(1);
+    });
   });
 });

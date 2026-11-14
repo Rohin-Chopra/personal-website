@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Script from "next/script";
 import { useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -15,11 +16,19 @@ import { cn } from "@/lib/utils";
 
 const API_URI = process.env.NEXT_PUBLIC_API_URI;
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+declare global {
+  interface Window {
+    turnstile?: { reset: (widget?: string | HTMLElement) => void };
+  }
+}
 
 const schema = z.object({
   name: z.string().trim().min(1, "Please enter a name"),
   email: z.string().trim().email("Please enter a valid email"),
   message: z.string().trim().min(1, "Please enter a message"),
+  website: z.string().optional(),
 });
 
 type FormInputs = z.infer<typeof schema>;
@@ -49,9 +58,15 @@ export const ContactForm = () => {
   });
   const { toast } = useToast();
 
-  const onSubmitSuccess: SubmitHandler<FormInputs> = async (data) => {
+  const onSubmitSuccess: SubmitHandler<FormInputs> = async (data, event) => {
     try {
       setIsLoading(true);
+      // The Turnstile widget adds this hidden input to the form once solved.
+      const turnstileToken = (
+        event?.target as HTMLFormElement | undefined
+      )?.querySelector<HTMLInputElement>(
+        'input[name="cf-turnstile-response"]',
+      )?.value;
       const res = await fetch(`${API_URI}/contact`, {
         method: "POST",
         headers: {
@@ -62,6 +77,8 @@ export const ContactForm = () => {
           name: data.name,
           email: data.email.toLowerCase(),
           message: data.message,
+          website: data.website,
+          turnstileToken,
         }),
       });
 
@@ -78,6 +95,15 @@ export const ContactForm = () => {
               errorMessages ||
               responseData.message ||
               "Please check your input",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (res.status === 403) {
+          toast({
+            title: "Couldn't verify you're human",
+            description: "Please complete the check and try again",
             variant: "destructive",
           });
           return;
@@ -120,11 +146,12 @@ export const ContactForm = () => {
         });
       }
     } finally {
+      if (TURNSTILE_SITE_KEY) window.turnstile?.reset();
       setIsLoading(false);
     }
   };
 
-  const fieldProps = (field: keyof FormInputs) => ({
+  const fieldProps = (field: Exclude<keyof FormInputs, "website">) => ({
     id: field,
     "aria-invalid": errors[field] ? true : undefined,
     "aria-describedby": errors[field] ? `${field}-error` : undefined,
@@ -132,7 +159,7 @@ export const ContactForm = () => {
     ...register(field),
   });
 
-  const renderError = (field: keyof FormInputs) =>
+  const renderError = (field: Exclude<keyof FormInputs, "website">) =>
     errors[field]?.message ? (
       <p id={`${field}-error`} role="alert" className="mt-1 text-danger">
         {errors[field]?.message}
@@ -141,6 +168,20 @@ export const ContactForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmitSuccess)} noValidate>
+      {/* Honeypot: hidden from people and assistive tech, bots fill it in. */}
+      <div
+        aria-hidden
+        className="absolute left-[-9999px] size-px overflow-hidden"
+      >
+        <label htmlFor="website">Website</label>
+        <input
+          id="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          {...register("website")}
+        />
+      </div>
       <div className="mb-4">
         <label className="mb-2 block" htmlFor="name">
           Name
@@ -166,6 +207,19 @@ export const ContactForm = () => {
         />
         {renderError("message")}
       </div>
+      {TURNSTILE_SITE_KEY && (
+        <>
+          <Script
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            strategy="lazyOnload"
+          />
+          <div
+            className="cf-turnstile mt-4"
+            data-sitekey={TURNSTILE_SITE_KEY}
+            data-theme="auto"
+          />
+        </>
+      )}
       <Button
         type="submit"
         variant="default"

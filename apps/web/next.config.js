@@ -39,10 +39,11 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://va.vercel-scripts.com",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://va.vercel-scripts.com https://challenges.cloudflare.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
+              "frame-src 'self' https://challenges.cloudflare.com https://vercel.live",
               "connect-src 'self' https://*.vercel-scripts.com https://*.vercel-insights.com https://api.rohinchopra.com",
               "frame-ancestors 'self'",
               "base-uri 'self'",
