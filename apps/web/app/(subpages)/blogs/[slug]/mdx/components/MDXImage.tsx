@@ -14,10 +14,25 @@ export const MDXImage = ({ src, alt = "", width, height }: Props) => {
     throw new Error("MDX image src must be a non-empty string");
   }
 
-  if (!width || !height) {
-    throw new Error(
-      `Missing dimensions for ${src}. Add ?w=&h= to external image URLs.`,
+  // Remote hosts aren't allowed in `images.remotePatterns`, so external images
+  // skip the optimizer.
+  if (!src.startsWith("/")) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        className="mx-auto h-auto max-w-full"
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        loading="lazy"
+        decoding="async"
+      />
     );
+  }
+
+  if (!width || !height) {
+    throw new Error(`Couldn't determine the dimensions of ${src}`);
   }
 
   return (
