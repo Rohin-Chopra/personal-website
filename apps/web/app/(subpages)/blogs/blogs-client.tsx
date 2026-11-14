@@ -1,39 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { BlogItem } from "@/components/blog-item";
+import { SearchFilter, useSearchFilter } from "@/components/search-filter";
+import type { BlogSummary } from "@/types";
 
-import { BlogItem } from "../../components/blog-item";
-import { BlogSearch } from "../../components/blog-search";
-import type { BlogSummary } from "../../types";
+const getTags = (blog: BlogSummary) => blog.tags;
+const getSearchText = (blog: BlogSummary) => [blog.title, blog.description];
 
-type Props = {
-  initialBlogs: BlogSummary[];
-};
-
-export const BlogsClient = ({ initialBlogs }: Props) => {
-  const [filteredBlogs, setFilteredBlogs] =
-    useState<BlogSummary[]>(initialBlogs);
-
-  return (
-    <div className="min-h-screen pt-4 md:pt-10 dark:text-white">
-      <div className="container px-8">
-        <h1 className="mb-4 text-3xl font-bold md:text-4xl">My Blogs</h1>
-        <BlogSearch blogs={initialBlogs} onFilterChange={setFilteredBlogs} />
-        {filteredBlogs.length === 0 ? (
-          <p className="text-center text-gray-600 dark:text-gray-400">
-            No blogs found. Try adjusting your search or filters.
-          </p>
-        ) : (
-          filteredBlogs.map((post, index) => (
-            <div className="my-6 md:my-8" key={post.slug}>
-              <BlogItem blog={post} />
-              {index !== filteredBlogs.length - 1 && (
-                <hr className="mt-6 border-t-slate-800 md:mt-8 dark:border-t-slate-400" />
-              )}
-            </div>
-          ))
+export const BlogList = ({ blogs }: { blogs: BlogSummary[] }) =>
+  blogs.length === 0 ? (
+    <p className="text-center text-gray-600 dark:text-gray-400">
+      No blogs found. Try adjusting your search or filters.
+    </p>
+  ) : (
+    blogs.map((post, index) => (
+      <div className="my-6 md:my-8" key={post.slug}>
+        <BlogItem blog={post} />
+        {index !== blogs.length - 1 && (
+          <hr className="mt-6 border-t-slate-800 md:mt-8 dark:border-t-slate-400" />
         )}
       </div>
-    </div>
+    ))
+  );
+
+export const BlogsClient = ({ blogs }: { blogs: BlogSummary[] }) => {
+  const { query, setQuery, tags, selectedTag, setSelectedTag, filtered } =
+    useSearchFilter({ items: blogs, getTags, getSearchText, tagParam: "tag" });
+
+  return (
+    <>
+      <SearchFilter
+        label="Search blogs"
+        placeholder="Search blogs..."
+        query={query}
+        onQueryChange={setQuery}
+        tags={tags}
+        selectedTag={selectedTag}
+        onTagChange={setSelectedTag}
+        resultCount={filtered.length}
+        noun={{ singular: "post", plural: "posts" }}
+      />
+      <BlogList blogs={filtered} />
+    </>
   );
 };

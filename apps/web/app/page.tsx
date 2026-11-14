@@ -20,6 +20,7 @@ import {
 import { VscAzure } from "react-icons/vsc";
 
 import { ContactForm } from "@/components/contact-form";
+import { ProjectCard } from "@/components/project-card";
 import { Button } from "@/components/ui/button";
 import { BlogItem } from "@/components/blog-item";
 import { getBlogs } from "@/lib/getBlogs";
@@ -219,37 +220,16 @@ const HomePage = async () => {
           </h2>
           <div className="grid gap-6 md:grid-cols-3">
             {featuredProjects.map((project) => (
-              <div
-                key={project.title}
-                className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-darkGray"
-              >
-                <div className="relative h-40 w-full overflow-hidden">
-                  <Image
-                    src={project.imgUrl}
-                    alt={project.title}
-                    fill
-                    className="object-cover transition-transform duration-300 hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="mb-2 text-lg font-bold">{project.title}</h3>
-                  {project.description && (
-                    <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
-                      {project.description.length > 100
-                        ? `${project.description.substring(0, 100)}...`
-                        : project.description}
-                    </p>
-                  )}
-                  <Link
-                    href="/projects"
-                    className="text-sm font-medium text-primary hover:underline"
-                  >
-                    View all projects →
-                  </Link>
-                </div>
-              </div>
+              <ProjectCard key={project.title} project={project} compact />
             ))}
+          </div>
+          <div className="mt-6 flex justify-center">
+            <Link
+              href="/projects"
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              View all projects →
+            </Link>
           </div>
         </div>
       </section>
