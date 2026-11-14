@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { MdAccessTime } from "react-icons/md";
 
-import type { Blog } from "@/types";
+import { formatBlogDate } from "@/lib/blogFrontmatter";
+import type { BlogSummary } from "@/types";
 
 type Props = {
-  blog: Blog;
+  blog: BlogSummary;
 };
 
 export const BlogItem = ({ blog }: Props) => {
@@ -15,7 +16,7 @@ export const BlogItem = ({ blog }: Props) => {
       passHref
     >
       <div className="mb-2 flex flex-wrap items-center gap-4 text-slate-800 dark:text-slate-400">
-        <p>{blog.createdAt}</p>
+        <time dateTime={blog.createdAt}>{formatBlogDate(blog.createdAt)}</time>
         {blog.readingTime && (
           <div className="flex items-center gap-1">
             <MdAccessTime className="size-4" />

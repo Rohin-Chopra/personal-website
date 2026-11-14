@@ -4,11 +4,13 @@ import { notFound } from "next/navigation";
 import { MDXBlogBody } from "@/(subpages)/blogs/[slug]/mdx/MDXBlogBody";
 import type { BlogParams } from "@/(subpages)/blogs/[slug]/types";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { getBlog } from "@/lib/getBlog";
-import { getBlogs } from "@/lib/getBlogs";
-import { parseBlogDate } from "@/lib/parseBlogDate";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { ScrollProgressBar } from "@/components/scroll-progress-bar";
+import { formatBlogDate, toBlogDate } from "@/lib/blogFrontmatter";
+import { getBlog, getBlogs } from "@/lib/getBlogs";
+import { getAdjacentBlogs, getRelatedBlogs } from "@/lib/relatedBlogs";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
+
+import { BlogNavigation } from "./BlogNavigation";
 
 import "./style.css";
 
@@ -44,7 +46,8 @@ export const generateMetadata = async ({
       title: post.title,
       description: post.description,
       url: `/blogs/${slug}`,
-      publishedTime: parseBlogDate(post.createdAt).toISOString(),
+      publishedTime: toBlogDate(post.createdAt).toISOString(),
+      modifiedTime: toBlogDate(post.updatedAt ?? post.createdAt).toISOString(),
       authors: [SITE_NAME],
       tags: post.tags,
     },
@@ -62,14 +65,23 @@ const BlogPage = async ({ params }: BlogParams) => {
 
   if (!blog) return notFound();
 
-  const publishedAt = parseBlogDate(blog.createdAt);
+  const blogs = await getBlogs();
+  const { previous, next } = getAdjacentBlogs(blogs, blog.slug);
+  const related = getRelatedBlogs(blogs, blog);
+
+  const url = `${SITE_URL}/blogs/${blog.slug}`;
+  const publishedAt = toBlogDate(blog.createdAt);
+  const modifiedAt = toBlogDate(blog.updatedAt ?? blog.createdAt);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: blog.title,
     description: blog.description,
+    image: `${url}/opengraph-image`,
     datePublished: publishedAt.toISOString(),
-    url: `${SITE_URL}/blogs/${blog.slug}`,
+    dateModified: modifiedAt.toISOString(),
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
     keywords: blog.tags,
     author: { "@type": "Person", name: SITE_NAME, url: SITE_URL },
   };
@@ -99,9 +111,18 @@ const BlogPage = async ({ params }: BlogParams) => {
             <div className="pt-8">
               <div className="lg:w-2xl">
                 <p className="mb-4 dark:text-slate-400">
-                  <time dateTime={publishedAt.toISOString()}>
-                    {blog.createdAt}
+                  <time dateTime={blog.createdAt}>
+                    {formatBlogDate(blog.createdAt)}
                   </time>
+                  {blog.updatedAt && blog.updatedAt !== blog.createdAt && (
+                    <>
+                      {" "}
+                      · Updated{" "}
+                      <time dateTime={blog.updatedAt}>
+                        {formatBlogDate(blog.updatedAt)}
+                      </time>
+                    </>
+                  )}
                   {blog.readingTime && <> · {blog.readingTime} min read</>}
                 </p>
                 <h1 className="mb-4 text-3xl font-bold md:text-4xl">
@@ -116,6 +137,11 @@ const BlogPage = async ({ params }: BlogParams) => {
           <div>
             <div className="lg:w-2xl">
               <MDXBlogBody blog={blog} />
+              <BlogNavigation
+                previous={previous}
+                next={next}
+                related={related}
+              />
             </div>
           </div>
         </div>

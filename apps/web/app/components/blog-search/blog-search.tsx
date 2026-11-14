@@ -3,11 +3,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { MdSearch } from "react-icons/md";
 
-import type { Blog } from "@/types";
+import type { BlogSummary } from "@/types";
 
 type Props = {
-  blogs: Blog[];
-  onFilterChange: (filteredBlogs: Blog[]) => void;
+  blogs: BlogSummary[];
+  onFilterChange: (filteredBlogs: BlogSummary[]) => void;
 };
 
 export const BlogSearch = ({ blogs, onFilterChange }: Props) => {

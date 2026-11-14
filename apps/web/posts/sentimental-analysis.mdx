@@ -2,7 +2,8 @@
 title: Sentimental Analysis
 description: Build a Serverless Sentimental Analysis app on AWS
 slug: sentimental-analysis
-createdAt: August 5th, 2023
+createdAt: 2023-08-05
+tags: [AWS, Lambda, DynamoDB, Comprehend, Terraform]
 ---
 
 ## Introduction
@@ -247,7 +248,7 @@ export async function handler() {
           PartitionKey: uuid(),
         };
       }),
-    })
+    }),
   );
 }
 ```
@@ -292,14 +293,14 @@ const dynamoDbClient = new DynamoDBClient({ region: "ap-southeast-2" });
 
 export async function handler(event: KinesisStreamEvent): Promise<void> {
   const records = event.Records.map((record) =>
-    Buffer.from(record.kinesis.data, "base64").toString("utf-8")
+    Buffer.from(record.kinesis.data, "base64").toString("utf-8"),
   );
 
   const result = await comprehendClient.send(
     new BatchDetectSentimentCommand({
       TextList: records,
       LanguageCode: "en",
-    })
+    }),
   );
 
   if (!result.ResultList) {
@@ -310,7 +311,7 @@ export async function handler(event: KinesisStreamEvent): Promise<void> {
     (result) =>
       typeof result.Index === "number" &&
       result.Sentiment &&
-      result.SentimentScore
+      result.SentimentScore,
   ).map((value) => {
     let result = value as Required<BatchDetectSentimentItemResult>;
 
@@ -350,7 +351,7 @@ export async function handler(event: KinesisStreamEvent): Promise<void> {
           };
         }),
       },
-    })
+    }),
   );
 }
 ```
