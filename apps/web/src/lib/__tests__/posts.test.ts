@@ -35,18 +35,26 @@ describe("blog posts", () => {
 
   it("only link to routes and files that exist", async () => {
     const posts = await loadPosts(POSTS_DIRECTORY, { includeDrafts: true });
-    const published = new Set(
-      posts.filter((post) => !post.draft).map((post) => `/blogs/${post.slug}`),
-    );
+    const routes = (includeDrafts: boolean) =>
+      new Set(
+        posts
+          .filter((post) => includeDrafts || !post.draft)
+          .map((post) => `/blogs/${post.slug}`),
+      );
+    const published = routes(false);
+    const all = routes(true);
 
-    const broken = posts.flatMap(({ file, body }) =>
+    // Published posts may only link to published posts; drafts may also link
+    // to other drafts.
+    const broken = posts.flatMap(({ file, body, draft }) =>
       localLinks(body)
         .filter(({ isImage, path }) => {
           const exists = existsSync(
             join(PUBLIC_DIRECTORY, decodeURIComponent(path)),
           );
           if (isImage) return !exists;
-          return !(exists || STATIC_ROUTES.has(path) || published.has(path));
+          const postRoutes = draft ? all : published;
+          return !(exists || STATIC_ROUTES.has(path) || postRoutes.has(path));
         })
         .map(({ path }) => `${file}: ${path}`),
     );
