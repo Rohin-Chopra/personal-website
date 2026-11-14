@@ -1,54 +1,60 @@
 "use client";
 
 import type { DetailedHTMLProps, HTMLAttributes } from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCheck, FaCopy } from "react-icons/fa";
+
+import { cn } from "@/lib/utils";
+
+const COPIED_DURATION_MS = 1500;
 
 export const MDXPre = ({
   children,
+  className,
   ...props
-}: DetailedHTMLProps<HTMLAttributes<HTMLPreElement>, HTMLPreElement> & {
-  raw?: string;
-}) => {
+}: DetailedHTMLProps<HTMLAttributes<HTMLPreElement>, HTMLPreElement>) => {
   const ref = useRef<HTMLPreElement>(null);
-  const [isActive, setIsActive] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const handleClick = async () => {
-    if (!navigator.clipboard) {
-      console.warn("Clipboard not supported");
-      return;
+  useEffect(() => {
+    if (!copied) return;
+    const timeout = setTimeout(() => setCopied(false), COPIED_DURATION_MS);
+    return () => clearTimeout(timeout);
+  }, [copied]);
+
+  const handleCopy = async () => {
+    const text = (ref.current?.querySelector("code") ?? ref.current)
+      ?.textContent;
+    if (!text || !navigator.clipboard) return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+    } catch (error) {
+      console.warn("Couldn't copy code", error);
     }
-
-    const codeElement = ref.current?.querySelector("code");
-
-    if (!codeElement) return;
-
-    await navigator.clipboard.writeText(codeElement.innerText);
-
-    setIsActive(true);
-
-    setTimeout(() => {
-      setIsActive(false);
-    }, 300);
   };
 
   return (
-    <pre className="relative bg-dracula" {...props} ref={ref}>
-      <div className="relative">
-        <div
-          className="absolute right-0 pr-4 pl-2 text-xl transition-all duration-300"
-          onClick={handleClick}
-        >
-          <div>
-            {isActive ? (
-              <FaCheck className="cursor-pointer text-green-400" />
-            ) : (
-              <FaCopy className="cursor-pointer text-slate-600 hover:text-slate-400 dark:text-white" />
-            )}
-          </div>
-        </div>
+    <div className="relative">
+      <button
+        type="button"
+        onClick={handleCopy}
+        aria-label="Copy code"
+        className="absolute top-2 right-2 z-10 rounded-sm bg-dracula p-2 text-lg text-white/70 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-2 focus-visible:outline-blue-400"
+      >
+        {copied ? (
+          <FaCheck aria-hidden className="text-green-400" />
+        ) : (
+          <FaCopy aria-hidden />
+        )}
+      </button>
+      <span aria-live="polite" className="sr-only">
+        {copied ? "Copied" : ""}
+      </span>
+      <pre ref={ref} className={cn("bg-dracula pr-14", className)} {...props}>
         {children}
-      </div>
-    </pre>
+      </pre>
+    </div>
   );
 };

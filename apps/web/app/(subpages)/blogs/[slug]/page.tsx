@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { MDXBlogBody } from "@/(subpages)/blogs/[slug]/mdx/MDXBlogBody";
+import { TableOfContents } from "@/(subpages)/blogs/[slug]/TableOfContents";
 import type { BlogParams } from "@/(subpages)/blogs/[slug]/types";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { getBlog } from "@/lib/getBlog";
+import { getBlogHeadings } from "@/lib/getBlogHeadings";
 import { getBlogs } from "@/lib/getBlogs";
 import { parseBlogDate } from "@/lib/parseBlogDate";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -63,6 +65,7 @@ const BlogPage = async ({ params }: BlogParams) => {
   if (!blog) return notFound();
 
   const publishedAt = parseBlogDate(blog.createdAt);
+  const headings = getBlogHeadings(blog.body);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -114,7 +117,28 @@ const BlogPage = async ({ params }: BlogParams) => {
         </header>
         <div className="container px-4 pt-2 pb-8 md:mx-auto md:flex md:justify-center">
           <div>
-            <div className="lg:w-2xl">
+            <div className="relative lg:w-2xl">
+              {headings.length > 0 && (
+                <>
+                  <details className="mb-8 rounded-lg border border-slate-200 p-4 xl:hidden dark:border-slate-700">
+                    <summary className="cursor-pointer font-semibold">
+                      On this page
+                    </summary>
+                    <nav aria-label="Table of contents" className="mt-4">
+                      <TableOfContents headings={headings} />
+                    </nav>
+                  </details>
+                  <aside className="absolute top-0 left-full ml-12 hidden h-full w-56 xl:block">
+                    <nav
+                      aria-label="Table of contents"
+                      className="sticky top-32"
+                    >
+                      <p className="mb-3 text-sm font-semibold">On this page</p>
+                      <TableOfContents headings={headings} />
+                    </nav>
+                  </aside>
+                </>
+              )}
               <MDXBlogBody blog={blog} />
             </div>
           </div>

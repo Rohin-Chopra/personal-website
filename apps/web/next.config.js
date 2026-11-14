@@ -6,6 +6,8 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  // ESM-only; listing it also makes next/jest transform it for tests.
+  transpilePackages: ["github-slugger"],
   async headers() {
     return [
       {
