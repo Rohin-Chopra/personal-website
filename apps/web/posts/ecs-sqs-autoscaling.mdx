@@ -1,14 +1,20 @@
 ---
-
 title: Autoscaling ECS workloads with event-driven SQS metrics
 description: A detailed guide on autoscaling ECS workloads using SQS metrics, ensuring consistent performance during peak loads
 slug: ecs-sqs-autoscaling
-createdAt: April 12, 2024
+createdAt: 2024-04-12
+tags: [AWS, ECS, SQS, Terraform]
 ---
 
 <BlogAlert>
   <AlertTitle>Acknowledgment</AlertTitle>
-  <BlogAlertDescription>This blog post is inspired by an [insightful article by AWS](https://aws.amazon.com/blogs/containers/amazon-elastic-container-service-ecs-auto-scaling-using-custom-metrics/) that introduces the use of custom metrics of SQS for ECS autoscaling. Our goal is to extend this foundational piece with a detailed implementation guide, providing you a practical blueprint for your autoscaling needs.</BlogAlertDescription>
+  <BlogAlertDescription>
+    This blog post is inspired by an [insightful article by
+    AWS](https://aws.amazon.com/blogs/containers/amazon-elastic-container-service-ecs-auto-scaling-using-custom-metrics/)
+    that introduces the use of custom metrics of SQS for ECS autoscaling. Our
+    goal is to extend this foundational piece with a detailed implementation
+    guide, providing you a practical blueprint for your autoscaling needs.
+  </BlogAlertDescription>
 </BlogAlert>
 
 ## Introduction
@@ -31,7 +37,7 @@ Below is a 30000 feet overview of how the various components within our solution
 
 ### Lambda
 
-At regular intervals, this function will compute the  `BacklogPerTask` metric (which we discuss in depth below) by assessing the number of messages in the queue and current active tasks in a given ECS service.
+At regular intervals, this function will compute the `BacklogPerTask` metric (which we discuss in depth below) by assessing the number of messages in the queue and current active tasks in a given ECS service.
 
 ### Cloudwatch
 
@@ -140,11 +146,11 @@ async function getApproximateNumberOfMessagesInQueue(queueUrl: string) {
     new GetQueueAttributesCommand({
       QueueUrl: queueUrl,
       AttributeNames: ["ApproximateNumberOfMessages"],
-    })
+    }),
   );
 
   console.log(
-    `there are ${Attributes?.ApproximateNumberOfMessages} of messages in the queue`
+    `there are ${Attributes?.ApproximateNumberOfMessages} of messages in the queue`,
   );
 
   return +(Attributes?.ApproximateNumberOfMessages || 0);
@@ -152,18 +158,18 @@ async function getApproximateNumberOfMessagesInQueue(queueUrl: string) {
 
 async function getNumberOfActiveTaskInService(
   clusterName: string,
-  serviceName: string
+  serviceName: string,
 ) {
   const result = await ecsClient.send(
     new ListTasksCommand({
       cluster: clusterName,
       serviceName: serviceName,
       desiredStatus: "RUNNING",
-    })
+    }),
   );
 
   console.log(
-    `there are ${result.taskArns?.length} tasks running in ${clusterName}/${serviceName}`
+    `there are ${result.taskArns?.length} tasks running in ${clusterName}/${serviceName}`,
   );
 
   return result.taskArns?.length || 0;
@@ -172,10 +178,10 @@ async function getNumberOfActiveTaskInService(
 async function putMetricData(
   value: number,
   clusterName: string,
-  serviceName: string
+  serviceName: string,
 ) {
   console.log(
-    `Publishing metric value of ${value} for cluster: ${clusterName} and service: ${serviceName}`
+    `Publishing metric value of ${value} for cluster: ${clusterName} and service: ${serviceName}`,
   );
 
   await cloudwatchClient.send(
@@ -198,7 +204,7 @@ async function putMetricData(
           Value: value,
         },
       ],
-    })
+    }),
   );
 }
 
@@ -216,7 +222,7 @@ export async function handler() {
 
   const numberOfActiveTaskInService = await getNumberOfActiveTaskInService(
     ecsClusterName,
-    ecsServiceName
+    ecsServiceName,
   );
 
   const backlogPerTask =
@@ -379,7 +385,17 @@ resource "aws_lambda_permission" "backlog_per_task_metric_lambda" {
 
 <BlogAlert>
   <AlertTitle>End-to-End Setup Available</AlertTitle>
-  <BlogAlertDescription>While this guide focuses on the autoscaling aspect of ECS, it's worth mentioning that a full end-to-end implementation of setting up the ECR repository, ECS cluster and service etc. is available for those who are interested. To keep this discussion focused, we will not be deep-diving into the whole setup here. However, you can still find the entire application and infrastructure code. which covers the entire end-to-end setup at <a href="https://github.com/Rohin-Chopra/ecs-sqs-autoscaling-blog">this blog's Github repository.</a></BlogAlertDescription>
+  <BlogAlertDescription>
+    While this guide focuses on the autoscaling aspect of ECS, it's worth
+    mentioning that a full end-to-end implementation of setting up the ECR
+    repository, ECS cluster and service etc. is available for those who are
+    interested. To keep this discussion focused, we will not be deep-diving into
+    the whole setup here. However, you can still find the entire application and
+    infrastructure code. which covers the entire end-to-end setup at{" "}
+    <a href="https://github.com/Rohin-Chopra/ecs-sqs-autoscaling-blog">
+      this blog's Github repository.
+    </a>
+  </BlogAlertDescription>
 </BlogAlert>
 
 #### Scaling Target

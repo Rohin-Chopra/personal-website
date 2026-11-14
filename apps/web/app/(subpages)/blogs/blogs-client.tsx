@@ -4,14 +4,15 @@ import { useState } from "react";
 
 import { BlogItem } from "../../components/blog-item";
 import { BlogSearch } from "../../components/blog-search";
-import type { Blog } from "../../types";
+import type { BlogSummary } from "../../types";
 
 type Props = {
-  initialBlogs: Blog[];
+  initialBlogs: BlogSummary[];
 };
 
 export const BlogsClient = ({ initialBlogs }: Props) => {
-  const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(initialBlogs);
+  const [filteredBlogs, setFilteredBlogs] =
+    useState<BlogSummary[]>(initialBlogs);
 
   return (
     <div className="min-h-screen pt-4 md:pt-10 dark:text-white">

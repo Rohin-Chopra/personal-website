@@ -2,7 +2,8 @@
 title: Image Optimisation Pipeline
 description: Learn about serverless image optimization on AWS for a faster and smoother user experience.
 slug: image-optimization-pipeline
-createdAt: August 20th, 2023
+createdAt: 2023-08-20
+tags: [AWS, Lambda, S3, Terraform]
 ---
 
 ## Introduction
@@ -336,7 +337,7 @@ export class ImageOptimizer {
 
   async #getObjectFromS3(
     objectKey: string,
-    bucketName: string
+    bucketName: string,
   ): Promise<Buffer> {
     console.log(`Getting object from S3: ${bucketName}/${objectKey}`);
 
@@ -344,7 +345,7 @@ export class ImageOptimizer {
       new GetObjectCommand({
         Bucket: bucketName,
         Key: objectKey,
-      })
+      }),
     );
     const stream = Body as Readable;
 
@@ -365,7 +366,7 @@ export class ImageOptimizer {
   async #resizeImage(
     image: sharp.Sharp,
     metadata: sharp.Metadata,
-    { width }: ImageDimensions
+    { width }: ImageDimensions,
   ): Promise<Buffer> {
     console.log(`Resizing image to width: ${width}`);
 
@@ -416,11 +417,11 @@ export class ImageOptimizer {
           Bucket: process.env.OUTPUT_S3_BUCKET_NAME,
           Key: `${prefix}-${size}.${extension}`,
           Body: resizedImage,
-        })
+        }),
       );
 
       console.log(
-        `Resized image uploaded to S3: ${prefix}-${size}.${extension}`
+        `Resized image uploaded to S3: ${prefix}-${size}.${extension}`,
       );
     }
   }

@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm";
 import { all } from "lowlight";
 
 import { mdxComponents } from "@/(subpages)/blogs/[slug]/mdx/components";
+import { rehypeImageSize } from "@/(subpages)/blogs/[slug]/mdx/plugins/rehypeImageSize";
 import { terraformSyntaxHighlighter } from "@/(subpages)/blogs/[slug]/mdx/terraformSyntaxHighlighter";
 import type { Blog } from "@/types";
 
@@ -25,6 +26,7 @@ export const MDXBlogBody = ({ blog }: Props) => {
           mdxOptions: {
             remarkPlugins: [remarkGfm, remarkFrontmatter],
             rehypePlugins: [
+              rehypeImageSize,
               rehypeSlug,
               [
                 rehypeAutolinkHeadings,

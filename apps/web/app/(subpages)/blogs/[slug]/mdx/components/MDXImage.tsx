@@ -5,41 +5,44 @@ type Props = React.DetailedHTMLProps<
   HTMLImageElement
 >;
 
-export const MDXImage = ({ src, alt = "" }: Props) => {
-  if (!src) {
-    throw new Error("src not provided");
+// The post column is `lg:w-2xl` (42rem) and full width below that.
+const SIZES = "(min-width: 1024px) 42rem, 100vw";
+
+/** Renders MDX images. `rehypeImageSize` fills in `width`/`height`. */
+export const MDXImage = ({ src, alt = "", width, height }: Props) => {
+  if (typeof src !== "string" || !src) {
+    throw new Error("MDX image src must be a non-empty string");
   }
 
-  if (typeof src !== "string") {
-    throw new Error("src must be a string");
+  // Remote hosts aren't allowed in `images.remotePatterns`, so external images
+  // skip the optimizer.
+  if (!src.startsWith("/")) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        className="mx-auto h-auto max-w-full"
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        loading="lazy"
+        decoding="async"
+      />
+    );
   }
 
-  let widthFromSrc = 550,
-    heightFromSrc = 450;
-
-  const url = new URL(src, "http://localhost.com");
-  const widthParam = url.searchParams.get("w") || url.searchParams.get("width");
-  const heightParam =
-    url.searchParams.get("h") || url.searchParams.get("height");
-
-  if (widthParam) {
-    widthFromSrc = +widthParam;
+  if (!width || !height) {
+    throw new Error(`Couldn't determine the dimensions of ${src}`);
   }
-  if (heightParam) {
-    heightFromSrc = +heightParam;
-  }
-
-  // Strip query string from src since we've extracted width/height
-  const cleanSrc = src.split("?")[0];
 
   return (
     <Image
-      className="mx-auto"
-      src={cleanSrc}
+      className="mx-auto h-auto max-w-full"
+      src={src}
       alt={alt}
-      height={heightFromSrc}
-      width={widthFromSrc}
-      loading="lazy"
+      width={Number(width)}
+      height={Number(height)}
+      sizes={SIZES}
     />
   );
 };

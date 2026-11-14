@@ -1,5 +1,5 @@
+import { toBlogDate } from "@/lib/blogFrontmatter";
 import { getBlogs } from "@/lib/getBlogs";
-import { parseBlogDate } from "@/lib/parseBlogDate";
 import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -10,7 +10,13 @@ const cdata = (value: string) =>
 export async function GET() {
   const blogs = await getBlogs();
   const lastBuildDate = blogs.length
-    ? parseBlogDate(blogs[0].createdAt)
+    ? new Date(
+        Math.max(
+          ...blogs.map((blog) =>
+            toBlogDate(blog.updatedAt ?? blog.createdAt).getTime(),
+          ),
+        ),
+      )
     : new Date();
 
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
@@ -30,7 +36,14 @@ export async function GET() {
       <description>${cdata(blog.description)}</description>
       <link>${SITE_URL}/blogs/${blog.slug}</link>
       <guid isPermaLink="true">${SITE_URL}/blogs/${blog.slug}</guid>
-      <pubDate>${parseBlogDate(blog.createdAt).toUTCString()}</pubDate>
+      <pubDate>${toBlogDate(blog.createdAt).toUTCString()}</pubDate>${(
+        blog.tags ?? []
+      )
+        .map(
+          (tag) => `
+      <category>${cdata(tag)}</category>`,
+        )
+        .join("")}
     </item>`,
       )
       .join("")}

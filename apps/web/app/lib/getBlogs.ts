@@ -1,49 +1,61 @@
 import { readdir, readFile } from "fs/promises";
 import matter from "gray-matter";
 import { extname, join } from "path";
-import { cache } from "react";
 import { cwd } from "process";
+import { cache } from "react";
 
-import type { Blog } from "@/types";
+import type { Blog, BlogSummary } from "@/types";
+import { parseBlogFrontmatter, toBlogDate } from "./blogFrontmatter";
 import { calculateReadingTime } from "./calculateReadingTime";
-import { parseBlogDate } from "./parseBlogDate";
 
-export const getBlogs = cache(async (): Promise<Blog[]> => {
-  const postsDirectory = join(cwd(), "posts");
-  const posts = (await readdir(postsDirectory)).filter((file) =>
+export const POSTS_DIRECTORY = join(cwd(), "posts");
+
+// Drafts are visible in `next dev` but never ship in a production build
+// (pages, sitemap, RSS) unless SHOW_DRAFTS=true.
+const includeDrafts = () =>
+  process.env.NODE_ENV !== "production" || process.env.SHOW_DRAFTS === "true";
+
+const readPost = async (file: string): Promise<Blog> => {
+  const source = await readFile(join(POSTS_DIRECTORY, file), "utf-8");
+  const { data, content } = matter(source);
+  const frontmatter = parseBlogFrontmatter(data, file);
+
+  return {
+    ...frontmatter,
+    body: content,
+    readingTime: calculateReadingTime(content),
+  };
+};
+
+const getPosts = cache(async (): Promise<Blog[]> => {
+  const files = (await readdir(POSTS_DIRECTORY)).filter((file) =>
     [".md", ".mdx"].includes(extname(file)),
   );
 
-  const postsPromises = await Promise.allSettled(
-    posts.map(async (file) => {
-      const filePath = join(postsDirectory, file);
-      const postContent = await readFile(filePath, "utf-8");
-      const { data, content } = matter(postContent);
+  // Any invalid post fails the build instead of silently disappearing.
+  const posts = await Promise.all(files.map(readPost));
 
-      const readingTime = calculateReadingTime(content);
-      const tags = data.tags
-        ? Array.isArray(data.tags)
-          ? data.tags
-          : [data.tags]
-        : undefined;
+  const slugs = new Set<string>();
+  for (const post of posts) {
+    if (slugs.has(post.slug)) {
+      throw new Error(`Duplicate blog slug "${post.slug}"`);
+    }
+    slugs.add(post.slug);
+  }
 
-      return {
-        ...data,
-        body: content,
-        readingTime,
-        tags,
-      } as Blog;
-    }),
-  );
-
-  return postsPromises
-    .filter(
-      (res): res is PromiseFulfilledResult<Blog> => res.status === "fulfilled",
-    )
-    .map((res) => res.value)
+  return posts
+    .filter((post) => includeDrafts() || !post.draft)
     .sort(
       (a, b) =>
-        parseBlogDate(b.createdAt).getTime() -
-        parseBlogDate(a.createdAt).getTime(),
+        toBlogDate(b.createdAt).getTime() - toBlogDate(a.createdAt).getTime(),
     );
 });
+
+/** Every published post, newest first, without the MDX body. */
+export const getBlogs = cache(async (): Promise<BlogSummary[]> =>
+  (await getPosts()).map(({ body: _body, ...summary }) => summary),
+);
+
+/** A single post, including its MDX body. */
+export const getBlog = async (slug: string): Promise<Blog | undefined> =>
+  (await getPosts()).find((post) => post.slug === slug);
