@@ -23,7 +23,9 @@ describe("ContactForm", () => {
     expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/message/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /let's talk/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /let's talk/i }),
+    ).toBeInTheDocument();
   });
 
   it("shows validation errors for empty fields", async () => {
@@ -48,7 +50,9 @@ describe("ContactForm", () => {
     await user.click(screen.getByRole("button", { name: /let's talk/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/please enter a valid email/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/please enter a valid email/i),
+      ).toBeInTheDocument();
     });
   });
 
@@ -76,7 +80,7 @@ describe("ContactForm", () => {
             "Content-Type": "application/json",
           }),
           body: expect.stringContaining("Test User"),
-        })
+        }),
       );
     });
   });
@@ -103,5 +107,26 @@ describe("ContactForm", () => {
       expect(global.fetch).toHaveBeenCalled();
     });
   });
-});
 
+  it("hides the honeypot field from people and sends it empty", async () => {
+    const user = userEvent.setup();
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      status: 200,
+      ok: true,
+      json: async () => ({ message: "Message sent" }),
+    });
+
+    render(<ContactForm />);
+
+    expect(screen.getByLabelText(/website/i)).toHaveAttribute("tabindex", "-1");
+
+    await user.type(screen.getByLabelText(/name/i), "Test User");
+    await user.type(screen.getByLabelText(/email/i), "test@example.com");
+    await user.type(screen.getByLabelText(/message/i), "Test message");
+    await user.click(screen.getByRole("button", { name: /let's talk/i }));
+
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+    const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+    expect(body.website).toBe("");
+  });
+});

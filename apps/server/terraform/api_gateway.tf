@@ -87,7 +87,29 @@ resource "aws_api_gateway_integration" "api_lambda_integration" {
 resource "aws_api_gateway_deployment" "api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.api.id
 
-  depends_on = [aws_api_gateway_integration.api_lambda_integration]
+  # A deployment is an immutable snapshot of the API, so create a new one
+  # whenever anything that makes up the API changes.
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_resource.api_contact_resource,
+      aws_api_gateway_method.api_contact_method,
+      aws_api_gateway_integration.api_lambda_integration,
+      aws_api_gateway_method.options_method,
+      aws_api_gateway_method_response.options_response,
+      aws_api_gateway_integration.options_api_integration,
+      aws_api_gateway_integration_response.options_api_integration_response,
+    ]))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  depends_on = [
+    aws_api_gateway_integration.api_lambda_integration,
+    aws_api_gateway_integration.options_api_integration,
+    aws_api_gateway_integration_response.options_api_integration_response,
+  ]
 }
 
 resource "aws_api_gateway_stage" "api_stage" {
@@ -111,13 +133,14 @@ resource "aws_api_gateway_usage_plan" "api_usage_plan" {
     stage  = aws_api_gateway_stage.api_stage.stage_name
   }
 
-  # Rate limiting: 10 requests per second, burst of 20
+  # The API key ships in client JS and is shared by every visitor, so keep the
+  # throttle low; per-IP limits are enforced by the WAF rate-based rule.
   throttle_settings {
-    rate_limit  = 10
-    burst_limit = 20
+    rate_limit  = 1
+    burst_limit = 5
   }
 
-  # Quota: 1000 requests per day per API key
+  # Quota: 1000 requests per day across all visitors
   quota_settings {
     limit  = 1000
     period = "DAY"

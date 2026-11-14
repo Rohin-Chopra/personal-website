@@ -5,13 +5,38 @@ import { config } from "./config";
 
 const sesClient = new SESv2Client({ region: "ap-southeast-2" });
 
-const schema = z
-  .object({
-    name: z.string().min(1).max(100).trim(),
-    email: z.string().email().max(255).trim().toLowerCase(),
-    message: z.string().min(1).max(5000).trim(),
-  })
-  .required();
+const schema = z.object({
+  name: z.string().min(1).max(100).trim(),
+  email: z.string().email().max(255).trim().toLowerCase(),
+  message: z.string().min(1).max(5000).trim(),
+  // Honeypot: hidden from people, so only bots fill it in.
+  website: z.string().max(500).optional(),
+  turnstileToken: z.string().max(2048).optional(),
+});
+
+const TURNSTILE_VERIFY_URL =
+  "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+const verifyTurnstileToken = async (
+  secret: string,
+  token: string | undefined,
+  remoteIp: string | undefined,
+): Promise<boolean> => {
+  if (!token) return false;
+
+  const form = new URLSearchParams({ secret, response: token });
+  if (remoteIp) form.set("remoteip", remoteIp);
+
+  const res = await fetch(TURNSTILE_VERIFY_URL, {
+    method: "POST",
+    body: form,
+    signal: AbortSignal.timeout(5000),
+  });
+  if (!res.ok) return false;
+
+  const result = (await res.json()) as { success?: boolean };
+  return result.success === true;
+};
 
 // Sanitize input to prevent XSS
 const sanitizeString = (str: string): string => {
@@ -21,17 +46,25 @@ const sanitizeString = (str: string): string => {
     .replace(/on\w+=/gi, ""); // Remove event handlers like onclick=
 };
 
-const sendTemplatedEmail = async (
-  toAddress: string,
-  templateName: string,
-  templateData: Record<string, unknown>,
-): Promise<void> => {
+const sendTemplatedEmail = async ({
+  toAddress,
+  replyToAddress,
+  templateName,
+  templateData,
+}: {
+  toAddress: string;
+  replyToAddress?: string;
+  templateName: string;
+  templateData: Record<string, unknown>;
+}): Promise<void> => {
   await sesClient.send(
     new SendEmailCommand({
       FromEmailAddress: config.noReplyEmail,
       Destination: {
         ToAddresses: [toAddress],
       },
+      ReplyToAddresses: replyToAddress ? [replyToAddress] : undefined,
+      ConfigurationSetName: config.sesConfigurationSetName,
       Content: {
         Template: {
           TemplateName: templateName,
@@ -63,7 +96,6 @@ export const contactHandler = async (
     console.log(JSON.stringify(logEntry));
   };
 
-  // Handle rate limiting (API Gateway returns 429, but we should handle it gracefully)
   const corsHeaders = {
     "Access-Control-Allow-Origin": "https://www.rohinchopra.com",
     "Access-Control-Allow-Headers": "Content-Type",
@@ -103,8 +135,37 @@ export const contactHandler = async (
       };
     }
 
-    // Sanitize inputs
-    const { name, email, message } = validationResult.data;
+    const { name, email, message, website, turnstileToken } =
+      validationResult.data;
+
+    // Pretend the honeypot submission worked so bots don't adapt.
+    if (website) {
+      log("warn", "Honeypot field filled, dropping submission");
+      return {
+        statusCode: 200,
+        headers: corsHeaders,
+        body: JSON.stringify({ message: "Message sent" }),
+      };
+    }
+
+    if (config.turnstileSecretKey) {
+      const isHuman = await verifyTurnstileToken(
+        config.turnstileSecretKey,
+        turnstileToken,
+        event.requestContext.identity?.sourceIp,
+      );
+      if (!isHuman) {
+        log("warn", "Turnstile verification failed");
+        return {
+          statusCode: 403,
+          headers: corsHeaders,
+          body: JSON.stringify({
+            message: "Bot verification failed, please try again",
+          }),
+        };
+      }
+    }
+
     const sanitizedName = sanitizeString(name);
     const sanitizedMessage = sanitizeString(message);
 
@@ -112,20 +173,17 @@ export const contactHandler = async (
       email: email.substring(0, 3) + "***", // Partial email for logging
     });
 
-    // Send email to myself about the message the user sent
-    await sendTemplatedEmail(
-      config.adminEmail,
-      config.notifyEmailTemplateName,
-      {
+    // Only ever email the site owner. Sending anything to the caller-supplied
+    // address would let anyone use this API to email arbitrary people.
+    await sendTemplatedEmail({
+      toAddress: config.adminEmail,
+      replyToAddress: email,
+      templateName: config.notifyEmailTemplateName,
+      templateData: {
         NAME: sanitizedName,
         EMAIL: email,
         MESSAGE: sanitizedMessage,
       },
-    );
-
-    // Send email to the user confirming that I have received their email
-    await sendTemplatedEmail(email, config.replyEmailTemplateName, {
-      NAME: sanitizedName,
     });
 
     log("info", "Contact form submission successful");
