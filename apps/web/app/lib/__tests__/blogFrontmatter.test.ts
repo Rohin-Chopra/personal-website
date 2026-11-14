@@ -31,6 +31,7 @@ describe("parseBlogFrontmatter", () => {
     ["a missing slug", { ...valid, slug: undefined }],
     ["a free-text date", { ...valid, createdAt: "April 12, 2024" }],
     ["an invalid slug", { ...valid, slug: "My Post" }],
+    ["an impossible date", { ...valid, createdAt: "2024-02-30" }],
     ["an unknown field", { ...valid, publishedAt: "2024-04-12" }],
   ])("rejects %s", (_, data) => {
     expect(() => parseBlogFrontmatter(data, "bad.mdx")).toThrow(

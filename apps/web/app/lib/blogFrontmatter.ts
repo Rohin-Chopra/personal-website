@@ -7,11 +7,15 @@ const isoDate = z
   .union([z.date(), z.string().regex(ISO_DATE, "Use an ISO date (YYYY-MM-DD)")])
   .transform((value, ctx) => {
     const date = value instanceof Date ? value : new Date(`${value}T00:00:00Z`);
-    if (Number.isNaN(date.getTime())) {
+    const iso = Number.isNaN(date.getTime())
+      ? undefined
+      : date.toISOString().slice(0, 10);
+    // `new Date` rolls impossible days over (2024-02-30 -> 2024-03-01).
+    if (!iso || (typeof value === "string" && iso !== value)) {
       ctx.addIssue({ code: "custom", message: "Invalid date" });
       return z.NEVER;
     }
-    return date.toISOString().slice(0, 10);
+    return iso;
   });
 
 export const blogFrontmatterSchema = z
