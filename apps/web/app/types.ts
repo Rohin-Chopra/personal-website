@@ -14,3 +14,12 @@ export interface BlogSummary {
 export interface Blog extends BlogSummary {
   body: string;
 }
+
+export interface Project {
+  title: string;
+  link: string;
+  imgUrl: string;
+  description?: string;
+  technologies?: string[];
+  github?: string;
+}
