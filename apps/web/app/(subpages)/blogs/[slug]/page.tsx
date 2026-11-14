@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { MDXBlogBody } from "@/(subpages)/blogs/[slug]/mdx/MDXBlogBody";
+import { TableOfContents } from "@/(subpages)/blogs/[slug]/TableOfContents";
 import type { BlogParams } from "@/(subpages)/blogs/[slug]/types";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { getBlogHeadings } from "@/lib/getBlogHeadings";
 import { ScrollProgressBar } from "@/components/scroll-progress-bar";
 import { formatBlogDate, toBlogDate } from "@/lib/blogFrontmatter";
 import { getBlog, getBlogs } from "@/lib/getBlogs";
@@ -72,6 +74,7 @@ const BlogPage = async ({ params }: BlogParams) => {
   const url = `${SITE_URL}/blogs/${blog.slug}`;
   const publishedAt = toBlogDate(blog.createdAt);
   const modifiedAt = toBlogDate(blog.updatedAt ?? blog.createdAt);
+  const headings = getBlogHeadings(blog.body);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -135,7 +138,28 @@ const BlogPage = async ({ params }: BlogParams) => {
         </header>
         <div className="container px-4 pt-2 pb-8 md:mx-auto md:flex md:justify-center">
           <div>
-            <div className="lg:w-2xl">
+            <div className="relative lg:w-2xl">
+              {headings.length > 0 && (
+                <>
+                  <details className="mb-8 rounded-lg border border-slate-200 p-4 xl:hidden dark:border-slate-700">
+                    <summary className="cursor-pointer font-semibold">
+                      On this page
+                    </summary>
+                    <nav aria-label="Table of contents" className="mt-4">
+                      <TableOfContents headings={headings} />
+                    </nav>
+                  </details>
+                  <aside className="absolute top-0 left-full ml-12 hidden h-full w-56 xl:block">
+                    <nav
+                      aria-label="Table of contents"
+                      className="sticky top-32"
+                    >
+                      <p className="mb-3 text-sm font-semibold">On this page</p>
+                      <TableOfContents headings={headings} />
+                    </nav>
+                  </aside>
+                </>
+              )}
               <MDXBlogBody blog={blog} />
               <BlogNavigation
                 previous={previous}
