@@ -1,0 +1,10 @@
+name: personal-website-github
+description: IAM roles GitHub Actions assumes through OIDC (applied by hand)
+main: index.ts
+runtime:
+  name: nodejs
+  options:
+    packagemanager: pnpm
+    typescript: false
+backend:
+  url: s3://personal-website-pulumi-state-677065002466?region=ap-southeast-2

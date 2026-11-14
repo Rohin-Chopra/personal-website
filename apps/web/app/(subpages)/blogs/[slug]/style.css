@@ -1,9 +1,0 @@
-#gradientBackgroundHeader {
-  background: linear-gradient(to top, #fff, transparent),
-    linear-gradient(90deg, rgba(82, 33, 230, 0.2), rgba(82, 33, 230, 0.9));
-}
-
-:is(.dark #gradientBackgroundHeader) {
-  background: linear-gradient(to top, #000, transparent),
-    linear-gradient(90deg, rgba(49, 8, 67, 0.2), rgba(82, 33, 230, 0.9));
-}

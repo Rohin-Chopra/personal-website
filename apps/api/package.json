@@ -1,0 +1,11 @@
+{
+  "name": "api",
+  "private": true,
+  "description": "Contact form Lambda (Go, provided.al2023, arm64)",
+  "scripts": {
+    "build": "GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -trimpath -ldflags='-s -w -buildid=' -o dist/bootstrap ./cmd/contact",
+    "test": "go test -race -count=1 ./...",
+    "lint": "test -z \"$(gofmt -l .)\" && go vet ./...",
+    "typecheck": "go build ./..."
+  }
+}
