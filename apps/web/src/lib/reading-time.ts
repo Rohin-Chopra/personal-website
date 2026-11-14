@@ -8,4 +8,3 @@ export const calculateReadingTime = (text: string): number => {
   const readingTime = Math.ceil(wordCount / wordsPerMinute);
   return Math.max(1, readingTime); // Minimum 1 minute
 };
-

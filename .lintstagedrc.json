@@ -1,11 +1,9 @@
 {
-  "apps/web/**/*.{ts,tsx,js,jsx,mjs}": [
+  "apps/web/**/*.{ts,tsx,js}": [
     "pnpm --filter web exec eslint --fix",
     "prettier --write"
   ],
-  "apps/server/**/*.ts": [
-    "pnpm --filter server exec eslint --fix",
-    "prettier --write"
-  ],
-  "*.{json,md,mdx,css,html,yml,yaml}": ["prettier --write"]
+  "infra/**/*.ts": ["prettier --write"],
+  "apps/api/**/*.go": ["gofmt -w"],
+  "*.{json,md,css,yml,yaml}": ["prettier --write"]
 }

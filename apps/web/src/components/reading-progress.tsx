@@ -8,7 +8,8 @@ export const ReadingProgress = () => {
     const update = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+        const { scrollTop, scrollHeight, clientHeight } =
+          document.documentElement;
         const max = scrollHeight - clientHeight;
         setProgress(max > 0 ? Math.min(1, scrollTop / max) : 0);
       });
@@ -24,7 +25,10 @@ export const ReadingProgress = () => {
   }, []);
 
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5">
+    <div
+      aria-hidden
+      className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5"
+    >
       <div
         className="h-full origin-left bg-accent"
         style={{ transform: `scaleX(${progress})` }}

@@ -47,8 +47,14 @@ export const seo = ({
       { name: "twitter:image", content: imageUrl },
       ...(article
         ? [
-            { property: "article:published_time", content: article.publishedTime },
-            { property: "article:modified_time", content: article.modifiedTime },
+            {
+              property: "article:published_time",
+              content: article.publishedTime,
+            },
+            {
+              property: "article:modified_time",
+              content: article.modifiedTime,
+            },
             { property: "article:author", content: SITE_NAME },
             // Meta is de-duplicated by name/property, so tags go in one tag.
             { name: "keywords", content: article.tags.join(", ") },
@@ -58,3 +64,9 @@ export const seo = ({
     links: [{ rel: "canonical", href: url }],
   };
 };
+
+/** A JSON-LD `<script>` for `head().scripts`, safe to inline in HTML. */
+export const jsonLd = (data: Record<string, unknown>) => ({
+  type: "application/ld+json",
+  children: JSON.stringify(data).replace(/</g, "\\u003c"),
+});

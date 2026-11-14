@@ -2,7 +2,9 @@ import { Link } from "@tanstack/react-router";
 
 export const NotFound = () => (
   <section className="container-page flex min-h-[60vh] flex-col items-start justify-center py-24">
-    <p className="font-mono text-xs tracking-widest text-accent uppercase">Error 404</p>
+    <p className="font-mono text-xs tracking-widest text-accent uppercase">
+      Error 404
+    </p>
     <h1 className="mt-4 font-serif text-6xl tracking-tight sm:text-7xl">
       This page doesn&apos;t <em>exist</em>.
     </h1>

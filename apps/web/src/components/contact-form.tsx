@@ -1,4 +1,9 @@
-import { ArrowRight, CircleAlert, CircleCheck, LoaderCircle } from "lucide-react";
+import {
+  ArrowRight,
+  CircleAlert,
+  CircleCheck,
+  LoaderCircle,
+} from "lucide-react";
 import { type FormEvent, useEffect, useId, useState } from "react";
 import { z } from "zod";
 
@@ -11,7 +16,11 @@ declare global {
 }
 
 const schema = z.object({
-  name: z.string().trim().min(1, "Please enter a name").max(100, "Please keep your name under 100 characters"),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Please enter a name")
+    .max(100, "Please keep your name under 100 characters"),
   email: z
     .string()
     .trim()
@@ -45,7 +54,10 @@ const readJson = async (res: Response): Promise<ApiResponse> => {
   }
 };
 
-const errorFor = (status: number, body: ApiResponse): Extract<Status, { state: "error" }> => {
+const errorFor = (
+  status: number,
+  body: ApiResponse,
+): Extract<Status, { state: "error" }> => {
   if (status === 400 && body.errors?.length) {
     return {
       state: "error",
@@ -70,7 +82,8 @@ const errorFor = (status: number, body: ApiResponse): Extract<Status, { state: "
   return {
     state: "error",
     title: "Something went wrong",
-    description: "Your message wasn't sent. Please try again in a little while.",
+    description:
+      "Your message wasn't sent. Please try again in a little while.",
   };
 };
 
@@ -87,7 +100,8 @@ export const ContactForm = () => {
   const id = useId();
 
   useEffect(() => {
-    if (!TURNSTILE_SITE_KEY || document.querySelector("script[data-turnstile]")) return;
+    if (!TURNSTILE_SITE_KEY || document.querySelector("script[data-turnstile]"))
+      return;
     const script = document.createElement("script");
     script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
     script.async = true;
@@ -114,7 +128,9 @@ export const ContactForm = () => {
         next[field] ??= issue.message;
       }
       setErrors(next);
-      const first = (["name", "email", "message"] as const).find((f) => next[f]);
+      const first = (["name", "email", "message"] as const).find(
+        (f) => next[f],
+      );
       if (first) form.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
       return;
     }
@@ -163,8 +179,10 @@ export const ContactForm = () => {
     "aria-describedby": errors[name] ? `${id}-${name}-error` : undefined,
     className: inputClass(Boolean(errors[name])),
     onInput: () => {
-      if (errors[name]) setErrors((current) => ({ ...current, [name]: undefined }));
-      if (status.state !== "idle" && status.state !== "sending") setStatus({ state: "idle" });
+      if (errors[name])
+        setErrors((current) => ({ ...current, [name]: undefined }));
+      if (status.state !== "idle" && status.state !== "sending")
+        setStatus({ state: "idle" });
     },
   });
 
@@ -180,21 +198,41 @@ export const ContactForm = () => {
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
       {/* Honeypot: hidden from people and assistive tech; bots fill it in. */}
-      <div aria-hidden className="absolute -left-[9999px] size-px overflow-hidden">
+      <div
+        aria-hidden
+        className="absolute -left-[9999px] size-px overflow-hidden"
+      >
         <label htmlFor={`${id}-website`}>Website</label>
-        <input id={`${id}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
+        <input
+          id={`${id}-website`}
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor={`${id}-name`} className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor={`${id}-name`}
+            className="mb-2 block text-sm font-medium"
+          >
             Name
           </label>
-          <input {...field("name")} type="text" autoComplete="name" placeholder="Ada Lovelace" />
+          <input
+            {...field("name")}
+            type="text"
+            autoComplete="name"
+            placeholder="Ada Lovelace"
+          />
           {fieldError("name")}
         </div>
         <div>
-          <label htmlFor={`${id}-email`} className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor={`${id}-email`}
+            className="mb-2 block text-sm font-medium"
+          >
             Email
           </label>
           <input
@@ -208,7 +246,10 @@ export const ContactForm = () => {
         </div>
       </div>
       <div>
-        <label htmlFor={`${id}-message`} className="mb-2 block text-sm font-medium">
+        <label
+          htmlFor={`${id}-message`}
+          className="mb-2 block text-sm font-medium"
+        >
           Message
         </label>
         <textarea
@@ -221,7 +262,11 @@ export const ContactForm = () => {
       </div>
 
       {TURNSTILE_SITE_KEY && (
-        <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="auto" />
+        <div
+          className="cf-turnstile"
+          data-sitekey={TURNSTILE_SITE_KEY}
+          data-theme="auto"
+        />
       )}
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -239,7 +284,10 @@ export const ContactForm = () => {
           ) : (
             <>
               Send message
-              <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight
+                aria-hidden
+                className="size-4 transition-transform group-hover:translate-x-0.5"
+              />
             </>
           )}
         </button>
@@ -255,7 +303,8 @@ export const ContactForm = () => {
             <p className="flex items-start gap-2 text-danger">
               <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
               <span>
-                <strong className="font-semibold">{status.title}.</strong> {status.description}
+                <strong className="font-semibold">{status.title}.</strong>{" "}
+                {status.description}
               </span>
             </p>
           )}

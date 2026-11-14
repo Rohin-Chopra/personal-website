@@ -1,42 +1,30 @@
 [
   {
+    "title": "MakeMyCareer",
     "link": "https://makemycareer.rohinchopra.com",
     "imgUrl": "/img/makemycareer.webp",
-    "title": "Makemycareer",
-    "description": "A career guidance platform that helps users discover their ideal career path based on their skills, interests, and market demand.",
-    "technologies": ["React", "Next.js", "Tailwind CSS", "AWS"],
-    "github": "https://github.com/Rohin-Chopra/makemycareer"
+    "description": "Every Monash, RMIT and Swinburne undergraduate course with its ATAR, VCE prerequisites and units. Enter your subjects once and each course tells you whether you meet its requirements.",
+    "technologies": [
+      "TanStack Start",
+      "Go",
+      "AWS Lambda",
+      "DynamoDB",
+      "Terraform"
+    ]
   },
   {
+    "title": "Margembie Labradors",
     "link": "https://www.margembielabradors.com.au",
     "imgUrl": "/img/margembie-labradors.webp",
-    "title": "Margembie Labradors",
-    "description": "A professional website for a Labrador breeding business, showcasing their dogs, services, and contact information.",
-    "technologies": ["React", "Gatsby", "Tailwind CSS", "Netlify"],
-    "github": "https://github.com/Rohin-Chopra/margembie-labradors"
+    "description": "Website and admin platform for a Labrador breeder: a public site for their dogs and litters, an admin dashboard for dogs, litters and the waiting list, and a GraphQL API.",
+    "technologies": ["Astro", "React", "Go", "GraphQL", "AWS Lambda"]
   },
   {
-    "link": "https://snap-landing-page-wine.vercel.app",
-    "imgUrl": "/img/snap-landing-page.webp",
-    "title": "Snap Landing Page",
-    "description": "A modern landing page for a photography service, featuring a responsive design and interactive elements.",
-    "technologies": ["HTML", "CSS", "JavaScript", "Responsive Design"],
-    "github": "https://github.com/Rohin-Chopra/snap-landing-page"
-  },
-  {
-    "link": "https://sunnyside-landing-page-rohin.netlify.app",
-    "imgUrl": "/img/sunny-side-landing-page.webp",
-    "title": "Sunny Side Landing Page",
-    "description": "A creative landing page for a digital agency, highlighting their services and portfolio with an engaging design.",
-    "technologies": ["HTML", "CSS", "JavaScript", "Responsive Design"],
-    "github": "https://github.com/Rohin-Chopra/sunnyside-landing-page"
-  },
-  {
-    "link": "https://frontend-challenges-amber.vercel.app",
-    "imgUrl": "/img/advice-generator-app.webp",
-    "title": "Advice Generator App",
-    "description": "An interactive application that provides random advice to users, built as part of a frontend challenge.",
-    "technologies": ["React", "API Integration", "CSS", "Vercel"],
-    "github": "https://github.com/Rohin-Chopra/advice-generator-app"
+    "title": "Digishelf",
+    "link": "https://digishelf.rohinchopra.com",
+    "imgUrl": "/img/digishelf.webp",
+    "description": "A digital shelf for the movies and TV shows you love. Search TMDB, add titles to your shelf and browse it as a wall of posters.",
+    "technologies": ["TanStack Start", "Go", "GraphQL", "AWS Lambda", "Pulumi"],
+    "github": "https://github.com/Rohin-Chopra/digishelf"
   }
 ]

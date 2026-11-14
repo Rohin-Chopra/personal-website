@@ -13,5 +13,4 @@ export const SOCIAL_LINKS = {
 export const API_URL = import.meta.env.VITE_API_URL as string | undefined;
 export const API_KEY = import.meta.env.VITE_API_KEY as string | undefined;
 export const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as
-  | string
-  | undefined;
+  string | undefined;

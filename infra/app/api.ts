@@ -164,7 +164,8 @@ export const createApi = (args: ApiArgs) => {
   });
 
   const corsHeaders = {
-    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Api-Key'",
+    "method.response.header.Access-Control-Allow-Headers":
+      "'Content-Type,X-Api-Key'",
     "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'",
     "method.response.header.Access-Control-Allow-Origin": `'${args.allowedOrigin}'`,
     "method.response.header.Access-Control-Max-Age": "'600'",
@@ -201,7 +202,8 @@ export const createApi = (args: ApiArgs) => {
       responseType,
       responseParameters: {
         "gatewayresponse.header.Access-Control-Allow-Origin": `'${args.allowedOrigin}'`,
-        "gatewayresponse.header.Access-Control-Allow-Headers": "'Content-Type,X-Api-Key'",
+        "gatewayresponse.header.Access-Control-Allow-Headers":
+          "'Content-Type,X-Api-Key'",
       },
     });
   }
@@ -233,7 +235,11 @@ export const createApi = (args: ApiArgs) => {
       },
     },
     {
-      dependsOn: [postIntegration, optionsIntegration, optionsIntegrationResponse],
+      dependsOn: [
+        postIntegration,
+        optionsIntegration,
+        optionsIntegrationResponse,
+      ],
       replaceOnChanges: ["triggers"],
       deleteBeforeReplace: false,
     },
@@ -249,7 +255,11 @@ export const createApi = (args: ApiArgs) => {
     restApi: api.id,
     stageName: apiStage.stageName,
     methodPath: "*/*",
-    settings: { throttlingRateLimit: 1, throttlingBurstLimit: 5, metricsEnabled: true },
+    settings: {
+      throttlingRateLimit: 1,
+      throttlingBurstLimit: 5,
+      metricsEnabled: true,
+    },
   });
 
   // The API key ships in client JS and is shared by every visitor, so keep the
@@ -426,7 +436,8 @@ export const createApi = (args: ApiArgs) => {
       threshold: 0,
     },
     "api-4xx-spike": {
-      description: "Spike in contact API 4XX responses (spam, throttling or quota exhaustion)",
+      description:
+        "Spike in contact API 4XX responses (spam, throttling or quota exhaustion)",
       namespace: "AWS/ApiGateway",
       metricName: "4XXError",
       dimensions: { ApiName: api.name, Stage: apiStage.stageName },
@@ -444,7 +455,8 @@ export const createApi = (args: ApiArgs) => {
       threshold: 0.05,
     },
     "ses-complaint-rate": {
-      description: "SES complaint rate is above 0.1% (AWS reviews accounts at 0.1%)",
+      description:
+        "SES complaint rate is above 0.1% (AWS reviews accounts at 0.1%)",
       namespace: "AWS/SES",
       metricName: "Reputation.ComplaintRate",
       dimensions: {},

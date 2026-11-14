@@ -28,7 +28,7 @@ export const getBlogHeadings = (markdown: string): BlogHeading[] => {
 
   for (const line of markdown.split("\n")) {
     const fenceMatch = line.match(FENCE);
-    if (fenceMatch) {
+    if (fenceMatch?.[1]) {
       const marker = fenceMatch[1];
       if (!fence) fence = marker;
       else if (marker[0] === fence[0] && marker.length >= fence.length)
@@ -37,12 +37,12 @@ export const getBlogHeadings = (markdown: string): BlogHeading[] => {
     }
     if (fence) continue;
 
-    const match = line.match(HEADING);
-    if (!match) continue;
+    const [, hashes, content] = line.match(HEADING) ?? [];
+    if (!hashes || !content) continue;
 
-    const text = toPlainText(match[2]);
+    const text = toPlainText(content);
     const id = slugger.slug(text);
-    const depth = match[1].length;
+    const depth = hashes.length;
     if (depth === 2 || depth === 3) headings.push({ id, text, depth });
   }
 

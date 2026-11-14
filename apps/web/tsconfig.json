@@ -13,7 +13,12 @@
     "verbatimModuleSyntax": true,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
-    "types": ["node", "vite/client", "vitest/globals", "@testing-library/jest-dom/vitest"],
+    "types": [
+      "node",
+      "vite/client",
+      "vitest/globals",
+      "@testing-library/jest-dom/vitest"
+    ],
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["src", "plugins", "scripts", "e2e", "*.ts"]

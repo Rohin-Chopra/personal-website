@@ -34,19 +34,25 @@ function BlogsPage() {
   // hydration to keep the first client render identical to the HTML.
   const hydrated = useHydrated();
   const query = hydrated ? (search.q ?? "") : "";
-  const tag = hydrated && search.tag && postTags.includes(search.tag) ? search.tag : undefined;
+  const tag =
+    hydrated && search.tag && postTags.includes(search.tag)
+      ? search.tag
+      : undefined;
 
   const filtered = filterItems(posts, { query, tag, getTags, getText });
 
   return (
     <div className="container-page py-16 sm:py-24">
       <header className="mb-12 max-w-3xl">
-        <p className="mb-4 font-mono text-xs tracking-widest text-muted uppercase">Writing</p>
+        <p className="mb-4 font-mono text-xs tracking-widest text-muted uppercase">
+          Writing
+        </p>
         <h1 className="font-serif text-6xl tracking-tight sm:text-7xl">
           Notes &amp; <em>guides</em>.
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-muted">
-          Hands-on write-ups about AWS, serverless architecture and infrastructure as code.
+          Hands-on write-ups about AWS, serverless architecture and
+          infrastructure as code.
         </p>
       </header>
 

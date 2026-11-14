@@ -32,10 +32,15 @@ const api = config.getBoolean("contactApiEnabled")
       allowedOrigin: siteOrigin,
       adminEmail: config.requireSecret("adminEmail"),
       noReplyEmail: config.get("noReplyEmail") ?? `no-reply@${domain}`,
-      alarmEmail: config.getSecret("alarmEmail") ?? config.requireSecret("adminEmail"),
+      alarmEmail:
+        config.getSecret("alarmEmail") ?? config.requireSecret("adminEmail"),
       turnstileSecretKey: config.getSecret("turnstileSecretKey"),
-      lambdaBinaryPath: new URL("../../apps/api/dist/bootstrap", import.meta.url).pathname,
-      wafRateLimitPer5Minutes: config.getNumber("wafRateLimitPer5Minutes") ?? 20,
+      lambdaBinaryPath: new URL(
+        "../../apps/api/dist/bootstrap",
+        import.meta.url,
+      ).pathname,
+      wafRateLimitPer5Minutes:
+        config.getNumber("wafRateLimitPer5Minutes") ?? 20,
       logRetentionDays: config.getNumber("logRetentionDays") ?? 30,
     })
   : undefined;

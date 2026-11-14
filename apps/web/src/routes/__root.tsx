@@ -15,7 +15,7 @@ import appCss from "@/styles/app.css?url";
 
 export const Route = createRootRoute({
   head: () => {
-    const { meta, links } = seo({ path: "/" });
+    const { meta } = seo({ path: "/" });
     return {
       meta: [
         { charSet: "utf-8" },
@@ -28,7 +28,12 @@ export const Route = createRootRoute({
       links: [
         { rel: "stylesheet", href: appCss },
         { rel: "icon", href: "/favicon.ico", sizes: "48x48" },
-        { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
+        {
+          rel: "icon",
+          type: "image/png",
+          sizes: "32x32",
+          href: "/favicon-32x32.png",
+        },
         { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
         { rel: "manifest", href: "/site.webmanifest" },
         {

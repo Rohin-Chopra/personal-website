@@ -6,9 +6,8 @@
   },
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "[terraform]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "hashicorp.terraform"
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -23,14 +22,11 @@
     "**/.git": true,
     "**/.DS_Store": true,
     "**/node_modules": true,
-    "**/.next": true,
     "**/dist": true
   },
   "search.exclude": {
     "**/node_modules": true,
-    "**/.next": true,
     "**/dist": true,
     "**/pnpm-lock.yaml": true
   }
 }
-

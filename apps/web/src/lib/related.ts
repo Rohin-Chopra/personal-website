@@ -25,8 +25,7 @@ export const getRelatedBlogs = (
     .map((other, index) => ({
       other,
       index,
-      shared:
-        other.tags.filter((tag) => tags.has(tag.toLowerCase())).length,
+      shared: other.tags.filter((tag) => tags.has(tag.toLowerCase())).length,
     }))
     .filter(({ shared }) => shared > 0)
     .sort((a, b) => b.shared - a.shared || a.index - b.index)

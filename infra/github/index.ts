@@ -10,7 +10,9 @@ const account = aws.getCallerIdentityOutput();
 const region = aws.getRegionOutput();
 
 const stateBucket = pulumi.interpolate`personal-website-pulumi-state-${account.accountId}`;
-const secretsKey = aws.kms.getAliasOutput({ name: "alias/personal-website-pulumi" });
+const secretsKey = aws.kms.getAliasOutput({
+  name: "alias/personal-website-pulumi",
+});
 
 // The account already has the GitHub OIDC provider (shared with other repos).
 const github = aws.iam.getOpenIdConnectProviderOutput({
@@ -74,9 +76,14 @@ const stateAccess = (write: boolean) =>
 
 // --- Deploy role: `pulumi up` on main, from the protected environment ------
 
+// GitHub stores the environment as "Production"; IAM matching is
+// case-sensitive, so accept either spelling.
 const deploy = new aws.iam.Role("personal-website-github-deploy", {
   name: "personal-website-github-deploy",
-  assumeRolePolicy: trustPolicy([`repo:${repository}:environment:production`]),
+  assumeRolePolicy: trustPolicy([
+    `repo:${repository}:environment:production`,
+    `repo:${repository}:environment:Production`,
+  ]),
   maxSessionDuration: 3600,
 });
 

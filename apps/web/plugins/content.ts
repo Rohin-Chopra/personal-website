@@ -50,7 +50,9 @@ export const content = ({ root }: { root: string }): Plugin => {
       const posts = await loadPosts(postsDirectory, { includeDrafts });
       for (const post of posts) this.addWatchFile(post.file);
 
-      const metadata = posts.map(({ file: _file, body: _body, ...post }) => post);
+      const metadata = posts.map(
+        ({ file: _file, body: _body, ...post }) => post,
+      );
       const modules = posts
         .map(
           (post) =>

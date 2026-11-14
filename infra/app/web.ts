@@ -39,9 +39,7 @@ export const createWeb = ({ domain, zoneId, usEast1, apiOrigin }: WebArgs) => {
 
   new aws.s3.BucketServerSideEncryptionConfiguration("site", {
     bucket: bucket.id,
-    rules: [
-      { applyServerSideEncryptionByDefault: { sseAlgorithm: "AES256" } },
-    ],
+    rules: [{ applyServerSideEncryptionByDefault: { sseAlgorithm: "AES256" } }],
   });
 
   new aws.s3.BucketVersioning("site", {
@@ -74,8 +72,8 @@ export const createWeb = ({ domain, zoneId, usEast1, apiOrigin }: WebArgs) => {
   );
 
   const validationRecords = [domain, wwwDomain].map((name, index) => {
-    const option = certificate.domainValidationOptions.apply(
-      (options) => options.find((o) => o.domainName === name)!,
+    const option = certificate.domainValidationOptions.apply((options) =>
+      options.find((o) => o.domainName === name)!,
     );
     return new aws.route53.Record(`site-cert-validation-${index}`, {
       zoneId,
@@ -205,7 +203,6 @@ function handler(event) {
         originId: "site",
         domainName: bucket.bucketRegionalDomainName,
         originAccessControlId: oac.id,
-        s3OriginConfig: { originAccessIdentity: "" },
       },
     ],
     defaultCacheBehavior: {

@@ -39,12 +39,17 @@ const writeOgImages = async () => {
       {
         eyebrow: "Senior Software Engineer",
         title: "Hi, I'm Rohin.",
-        subtitle: "Architecting, designing and developing robust and scalable solutions.",
+        subtitle:
+          "Architecting, designing and developing robust and scalable solutions.",
       },
     ],
     ...posts.map((post): [string, Parameters<typeof renderOgImage>[0]] => [
       `og/blogs/${post.slug}.png`,
-      { eyebrow: `Writing · ${post.readingTime} min read`, title: post.title, subtitle: post.description },
+      {
+        eyebrow: `Writing · ${post.readingTime} min read`,
+        title: post.title,
+        subtitle: post.description,
+      },
     ]),
   ];
 
@@ -62,7 +67,12 @@ const writeOgImages = async () => {
 const INLINE_SCRIPT = /<script(?![^>]*\ssrc=)([^>]*)>([\s\S]*?)<\/script>/gi;
 const isExecutable = (attrs: string) => {
   const type = /\btype=["']?([^"'\s>]+)/i.exec(attrs)?.[1]?.toLowerCase();
-  return !type || type === "module" || type === "text/javascript" || type === "application/javascript";
+  return (
+    !type ||
+    type === "module" ||
+    type === "text/javascript" ||
+    type === "application/javascript"
+  );
 };
 
 const addCspMeta = async () => {
@@ -75,7 +85,9 @@ const addCspMeta = async () => {
     const hashes = new Set<string>();
     for (const [, attrs = "", body = ""] of html.matchAll(INLINE_SCRIPT)) {
       if (!isExecutable(attrs) || body.length === 0) continue;
-      hashes.add(`'sha256-${createHash("sha256").update(body, "utf8").digest("base64")}'`);
+      hashes.add(
+        `'sha256-${createHash("sha256").update(body, "utf8").digest("base64")}'`,
+      );
     }
 
     const policy = `script-src ${[...SCRIPT_SRC_ALLOWLIST, ...hashes].join(" ")}`;
@@ -88,12 +100,35 @@ const addCspMeta = async () => {
   return pages.length;
 };
 
+// CloudFront serves 404.html for *any* unknown path, but its router state is
+// for /404, so hydrating it would mismatch. Ship it as static HTML: keep only
+// the theme script; its links are plain anchors and still work.
+const makeNotFoundStatic = async () => {
+  const file = join(outDir, "404.html");
+  const html = (await readFile(file, "utf8"))
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, (script) =>
+      script.includes('localStorage.getItem("theme")') ? script : "",
+    )
+    .replace(/<link rel="modulepreload"[^>]*>/gi, "");
+  await writeFile(file, html);
+};
+
 const assertOutputs = () => {
-  const required = ["index.html", "404.html", "blogs/index.html", "projects/index.html", "feed.xml", "sitemap.xml", "robots.txt"];
+  const required = [
+    "index.html",
+    "404.html",
+    "blogs/index.html",
+    "projects/index.html",
+    "feed.xml",
+    "sitemap.xml",
+    "robots.txt",
+  ];
   const missing = required.filter((file) => !existsSync(join(outDir, file)));
-  if (missing.length) throw new Error(`Build output is missing: ${missing.join(", ")}`);
+  if (missing.length)
+    throw new Error(`Build output is missing: ${missing.join(", ")}`);
 };
 
 assertOutputs();
+await makeNotFoundStatic();
 const [og, csp] = await Promise.all([writeOgImages(), addCspMeta()]);
 console.log(`postbuild: ${og} Open Graph images, CSP meta on ${csp} pages`);

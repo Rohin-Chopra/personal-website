@@ -10,28 +10,26 @@ import { certifications } from "@/content/certifications";
 import projects from "@/content/projects.json";
 import { skillGroups } from "@/content/skills";
 import { posts } from "@/lib/posts";
-import { seo } from "@/lib/seo";
+import { jsonLd, seo } from "@/lib/seo";
 import { SITE_NAME, SITE_ROLE, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
   head: () => {
     const { meta, links } = seo({ path: "/" });
     return {
-      meta: [
-        ...meta,
-        {
-          "script:ld+json": {
-            "@context": "https://schema.org",
-            "@type": "Person",
-            name: SITE_NAME,
-            jobTitle: SITE_ROLE,
-            url: SITE_URL,
-            image: `${SITE_URL}/img/hero.webp`,
-            sameAs: [SOCIAL_LINKS.github, SOCIAL_LINKS.linkedin],
-          },
-        },
-      ],
+      meta,
       links,
+      scripts: [
+        jsonLd({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: SITE_NAME,
+          jobTitle: SITE_ROLE,
+          url: SITE_URL,
+          image: `${SITE_URL}/img/hero.webp`,
+          sameAs: [SOCIAL_LINKS.github, SOCIAL_LINKS.linkedin],
+        }),
+      ],
     };
   },
   component: HomePage,
@@ -41,7 +39,10 @@ function HomePage() {
   return (
     <>
       <Hero />
-      <section aria-labelledby="writing" className="container-page py-20 sm:py-28">
+      <section
+        aria-labelledby="writing"
+        className="container-page py-20 sm:py-28"
+      >
         <SectionHeading
           index="01"
           title="Writing"
@@ -57,14 +58,20 @@ function HomePage() {
               className="group inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink"
             >
               All posts
-              <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight
+                aria-hidden
+                className="size-4 transition-transform group-hover:translate-x-0.5"
+              />
             </Link>
           }
         />
         <PostList posts={posts.slice(0, 3)} />
       </section>
 
-      <section aria-labelledby="projects" className="container-page py-20 sm:py-28">
+      <section
+        aria-labelledby="projects"
+        className="container-page py-20 sm:py-28"
+      >
         <SectionHeading
           index="02"
           title="Projects"
@@ -80,7 +87,10 @@ function HomePage() {
               className="group inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink"
             >
               All projects
-              <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight
+                aria-hidden
+                className="size-4 transition-transform group-hover:translate-x-0.5"
+              />
             </Link>
           }
         />
@@ -91,7 +101,10 @@ function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="toolbox" className="container-page py-20 sm:py-28">
+      <section
+        aria-labelledby="toolbox"
+        className="container-page py-20 sm:py-28"
+      >
         <SectionHeading
           index="03"
           title="Toolbox"
@@ -159,12 +172,15 @@ function HomePage() {
             <p className="mb-3 font-mono text-xs tracking-widest text-muted uppercase">
               <span className="text-accent">04</span> / Contact
             </p>
-            <h2 id="contact-heading" className="font-serif text-4xl tracking-tight sm:text-5xl">
+            <h2
+              id="contact-heading"
+              className="font-serif text-4xl tracking-tight sm:text-5xl"
+            >
               Let&apos;s <em>talk</em>.
             </h2>
             <p className="mt-4 max-w-sm leading-relaxed text-muted">
-              Got a question, an idea or a role you think I&apos;d be a good fit for? Send me a
-              message and I&apos;ll get back to you.
+              Got a question, an idea or a role you think I&apos;d be a good fit
+              for? Send me a message and I&apos;ll get back to you.
             </p>
             <SocialLinks className="mt-6 -ml-2" />
           </div>
@@ -203,9 +219,9 @@ function Hero() {
             </span>
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
-            I&apos;m incredibly passionate about solving problems, and tech is my weapon of
-            choice. I excel in architecting, designing and developing robust and scalable
-            solutions.
+            I&apos;m incredibly passionate about solving problems, and tech is
+            my weapon of choice. I excel in architecting, designing and
+            developing robust and scalable solutions.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Link
@@ -214,7 +230,10 @@ function Hero() {
               className="group inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 font-medium text-paper transition-colors hover:bg-accent hover:text-accent-ink"
             >
               Say hello
-              <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight
+                aria-hidden
+                className="size-4 transition-transform group-hover:translate-x-0.5"
+              />
             </Link>
             <Link
               to="/blogs"

@@ -2,7 +2,8 @@ import { toBlogDate } from "./post-schema.ts";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./site.ts";
 import type { PostSummary } from "./types.ts";
 
-const cdata = (value: string) => `<![CDATA[${value.replaceAll("]]>", "]]]]><![CDATA[>")}]]>`;
+const cdata = (value: string) =>
+  `<![CDATA[${value.replaceAll("]]>", "]]]]><![CDATA[>")}]]>`;
 
 const escapeXml = (value: string) =>
   value
@@ -11,7 +12,8 @@ const escapeXml = (value: string) =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
-const lastModified = (post: PostSummary) => toBlogDate(post.updatedAt ?? post.createdAt);
+const lastModified = (post: PostSummary) =>
+  toBlogDate(post.updatedAt ?? post.createdAt);
 
 export const renderRss = (posts: PostSummary[]) => {
   const lastBuildDate = posts.length

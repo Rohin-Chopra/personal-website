@@ -19,12 +19,19 @@ const isExternal = (href: string) =>
  * External links open in a new tab, internal links use client-side
  * navigation and hash/mailto links stay plain anchors.
  */
-export const MDXAnchor = ({ href = "", children, ...props }: ComponentProps<"a">) => {
+export const MDXAnchor = ({
+  href = "",
+  children,
+  ...props
+}: ComponentProps<"a">) => {
   if (isExternal(href)) {
     return (
       <a {...props} href={href} target="_blank" rel="noopener noreferrer">
         {children}
-        <ExternalLink aria-hidden className="ml-0.5 inline size-3.5 -translate-y-px align-baseline" />
+        <ExternalLink
+          aria-hidden
+          className="ml-0.5 inline size-3.5 -translate-y-px align-baseline"
+        />
         <span className="sr-only"> (opens in a new tab)</span>
       </a>
     );
@@ -58,7 +65,8 @@ export const MDXPre = ({ children, ...props }: ComponentProps<"pre">) => {
   }, [copied]);
 
   const copy = async () => {
-    const text = (ref.current?.querySelector("code") ?? ref.current)?.textContent;
+    const text = (ref.current?.querySelector("code") ?? ref.current)
+      ?.textContent;
     if (!text || !navigator.clipboard) return;
     try {
       await navigator.clipboard.writeText(text);
@@ -93,7 +101,12 @@ export const MDXPre = ({ children, ...props }: ComponentProps<"pre">) => {
 };
 
 /** Images are sized at build time by the rehype-image-size plugin. */
-export const MDXImage = ({ src, alt = "", width, height }: ComponentProps<"img">) => (
+export const MDXImage = ({
+  src,
+  alt = "",
+  width,
+  height,
+}: ComponentProps<"img">) => (
   <img
     src={src}
     alt={alt}

@@ -56,7 +56,8 @@ export default defineConfig({
         failOnError: true,
         // Query strings and fragments map onto the same file as the bare
         // path; prerender each page once, from its canonical URL.
-        filter: ({ path }) => !/[?#]/.test(path) && (path === "/" || !path.endsWith("/")),
+        filter: ({ path }) =>
+          !/[?#]/.test(path) && (path === "/" || !path.endsWith("/")),
       },
       pages: [
         { path: "/" },

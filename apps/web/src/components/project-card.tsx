@@ -42,7 +42,9 @@ export const ProjectCard = ({ project, compact = false }: Props) => (
           className="mt-0.5 size-5 shrink-0 text-muted transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
         />
       </h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted">{project.description}</p>
+      <p className="mt-2 text-sm leading-relaxed text-muted">
+        {project.description}
+      </p>
       <div className="mt-auto flex items-end justify-between gap-4 pt-5">
         {!compact ? (
           <ul className="flex flex-wrap gap-1.5" aria-label="Technologies">
@@ -67,7 +69,10 @@ export const ProjectCard = ({ project, compact = false }: Props) => (
           >
             <FaGithub aria-hidden className="size-4" />
             Code
-            <span className="sr-only"> for {project.title} (opens in a new tab)</span>
+            <span className="sr-only">
+              {" "}
+              for {project.title} (opens in a new tab)
+            </span>
           </a>
         )}
       </div>

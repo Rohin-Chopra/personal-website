@@ -72,7 +72,11 @@ export const SearchFilter = ({
       </div>
 
       {tags.length > 0 && (
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by tag">
+        <div
+          className="flex flex-wrap gap-2"
+          role="group"
+          aria-label="Filter by tag"
+        >
           <button
             type="button"
             aria-pressed={selectedTag === undefined}
@@ -95,7 +99,11 @@ export const SearchFilter = ({
         </div>
       )}
 
-      <p id={statusId} aria-live="polite" className="font-mono text-xs text-muted">
+      <p
+        id={statusId}
+        aria-live="polite"
+        className="font-mono text-xs text-muted"
+      >
         {resultCount} {resultCount === 1 ? noun.singular : noun.plural} found
       </p>
     </div>

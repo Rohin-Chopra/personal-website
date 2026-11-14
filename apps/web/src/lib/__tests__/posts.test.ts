@@ -1,58 +1,46 @@
-/**
- * @jest-environment node
- */
-import { existsSync } from "fs";
-import { readdir, readFile } from "fs/promises";
-import matter from "gray-matter";
-import { join } from "path";
+// @vitest-environment node
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-import { parseBlogFrontmatter } from "../blogFrontmatter";
-import { POSTS_DIRECTORY } from "../getBlogs";
+import { loadPosts } from "../../../plugins/posts.ts";
 
-const PUBLIC_DIRECTORY = join(POSTS_DIRECTORY, "..", "public");
-const STATIC_ROUTES = new Set(["/", "/blogs", "/projects", "/feed.xml"]);
-
-const loadPosts = async () => {
-  const files = (await readdir(POSTS_DIRECTORY)).filter((file) =>
-    /\.mdx?$/.test(file),
-  );
-  return Promise.all(
-    files.map(async (file) => {
-      const { data, content } = matter(
-        await readFile(join(POSTS_DIRECTORY, file), "utf-8"),
-      );
-      return { file, frontmatter: parseBlogFrontmatter(data, file), content };
-    }),
-  );
-};
+const ROOT = fileURLToPath(new URL("../../..", import.meta.url));
+const POSTS_DIRECTORY = join(ROOT, "posts");
+const PUBLIC_DIRECTORY = join(ROOT, "public");
+const STATIC_ROUTES = new Set([
+  "/",
+  "/blogs",
+  "/projects",
+  "/feed.xml",
+  "/sitemap.xml",
+]);
 
 // Markdown links/images and JSX href/src attributes pointing at local paths.
 const localLinks = (content: string) =>
   [
     ...content.matchAll(/(!?)\[[^\]]*\]\((\/[^)\s]*)\)/g),
     ...content.matchAll(/\b(href|src)=["'](\/[^"']*)["']/g),
-  ].map(([, kind, target]) => ({
+  ].map(([, kind, target = "/"]) => ({
     isImage: kind === "!" || kind === "src",
     path: new URL(target, "http://localhost").pathname,
   }));
 
 describe("blog posts", () => {
   it("have valid frontmatter and unique slugs", async () => {
-    const posts = await loadPosts();
-    const slugs = posts.map((post) => post.frontmatter.slug);
-    expect(new Set(slugs).size).toBe(slugs.length);
+    // loadPosts throws on invalid frontmatter or duplicate slugs.
+    const posts = await loadPosts(POSTS_DIRECTORY, { includeDrafts: true });
+    expect(posts.length).toBeGreaterThan(0);
   });
 
   it("only link to routes and files that exist", async () => {
-    const posts = await loadPosts();
+    const posts = await loadPosts(POSTS_DIRECTORY, { includeDrafts: true });
     const published = new Set(
-      posts
-        .filter((post) => !post.frontmatter.draft)
-        .map((post) => `/blogs/${post.frontmatter.slug}`),
+      posts.filter((post) => !post.draft).map((post) => `/blogs/${post.slug}`),
     );
 
-    const broken = posts.flatMap(({ file, content }) =>
-      localLinks(content)
+    const broken = posts.flatMap(({ file, body }) =>
+      localLinks(body)
         .filter(({ isImage, path }) => {
           const exists = existsSync(
             join(PUBLIC_DIRECTORY, decodeURIComponent(path)),

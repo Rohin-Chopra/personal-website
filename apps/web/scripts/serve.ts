@@ -50,7 +50,9 @@ const isFile = async (path: string) => {
 /** Mirrors the CloudFront viewer-request function in infra/app/web.ts. */
 const resolveUri = (uri: string) => {
   if (uri === "/") return "/index.html";
-  return uri.lastIndexOf(".") < uri.lastIndexOf("/") ? `${uri}/index.html` : uri;
+  return uri.lastIndexOf(".") < uri.lastIndexOf("/")
+    ? `${uri}/index.html`
+    : uri;
 };
 
 createServer(async (req, res) => {
@@ -58,7 +60,10 @@ createServer(async (req, res) => {
   const uri = decodeURIComponent(url.pathname);
 
   if (uri.length > 1 && uri.endsWith("/")) {
-    res.writeHead(301, { Location: uri.slice(0, -1) + url.search, ...SECURITY_HEADERS });
+    res.writeHead(301, {
+      Location: uri.slice(0, -1) + url.search,
+      ...SECURITY_HEADERS,
+    });
     res.end();
     return;
   }

@@ -23,14 +23,18 @@ export const PostList = ({
             className="group grid gap-2 py-7 transition-colors sm:grid-cols-[10rem_1fr_auto] sm:gap-8"
           >
             <div className="font-mono text-xs leading-6 text-muted">
-              <time dateTime={post.createdAt}>{formatBlogDate(post.createdAt)}</time>
+              <time dateTime={post.createdAt}>
+                {formatBlogDate(post.createdAt)}
+              </time>
               <span className="sm:block"> · {post.readingTime} min read</span>
             </div>
             <div>
               <Heading className="text-xl font-semibold tracking-tight text-balance transition-colors group-hover:text-accent">
                 {post.title}
               </Heading>
-              <p className="mt-2 max-w-2xl leading-relaxed text-muted">{post.description}</p>
+              <p className="mt-2 max-w-2xl leading-relaxed text-muted">
+                {post.description}
+              </p>
               {post.tags.length > 0 && (
                 <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Tags">
                   {post.tags.map((tag) => (

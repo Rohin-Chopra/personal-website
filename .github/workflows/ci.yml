@@ -1,74 +1,209 @@
-name: CI
+name: CI / Deploy
 
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Never cancel a deploy half-way; superseded PR runs can go.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: ap-southeast-2
 
 jobs:
-  checks:
+  web:
+    name: Web (lint, typecheck, unit tests, build)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
-
       - run: pnpm install --frozen-lockfile
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Test
-        run: pnpm test
-
-      - name: Build
-        run: pnpm build
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
+      - run: pnpm --filter web lint
+      - run: pnpm --filter web typecheck
+      - run: pnpm --filter web test
+      - run: pnpm --filter web build
 
   e2e:
+    name: Web (Playwright)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
-
       - run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright Chromium
-        run: pnpm --filter web exec playwright install --with-deps chromium
-
+      - run: pnpm --filter web exec playwright install --with-deps chromium
       - name: Build
         run: pnpm --filter web build
         env:
-          NEXT_TELEMETRY_DISABLED: 1
-          # The contact API is mocked with route interception in the specs.
-          NEXT_PUBLIC_API_URI: http://localhost:3000/api
-
-      - name: E2E
-        run: pnpm --filter web test:e2e --project=chromium
-
-      - uses: actions/upload-artifact@v4
+          # The contact API is mocked same-origin in the specs.
+          VITE_API_URL: http://localhost:4173/api
+      - run: pnpm --filter web test:e2e
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
           path: apps/web/playwright-report
           retention-days: 7
+
+  api:
+    name: API (Go)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: apps/api/go.mod
+          cache-dependency-path: apps/api/go.sum
+      - name: gofmt
+        run: test -z "$(gofmt -l .)"
+      - run: go vet ./...
+      - uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.15.0
+          # Built with the module's Go version (prebuilt binaries lag behind).
+          install-mode: goinstall
+          working-directory: apps/api
+      - run: go test -race -count=1 ./...
+      - name: Build Lambda (linux/arm64)
+        run: GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -trimpath -ldflags='-s -w -buildid=' -o dist/bootstrap ./cmd/contact
+
+  infra:
+    name: Infra (typecheck, Pulumi preview)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: apps/api/go.mod
+          cache-dependency-path: apps/api/go.sum
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter infra typecheck
+      - run: pnpm --filter api build
+      # Fork PRs can't mint OIDC tokens, so they skip the preview.
+      - if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_PLAN_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: pulumi/actions@v7
+        with:
+          command: preview
+          stack-name: production
+          work-dir: infra/app
+          diff: true
+
+  deploy:
+    name: Deploy to production
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [web, e2e, api, infra]
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://www.rohinchopra.com
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: apps/api/go.mod
+          cache-dependency-path: apps/api/go.sum
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter api build
+
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Pulumi up
+        uses: pulumi/actions@v7
+        id: pulumi
+        with:
+          command: up
+          stack-name: production
+          work-dir: infra/app
+
+      - name: Read stack outputs
+        id: stack
+        working-directory: infra/app
+        run: |
+          api_key=$(pulumi stack output apiKey --show-secrets -s production)
+          echo "::add-mask::$api_key"
+          {
+            echo "bucket=$(pulumi stack output siteBucket -s production)"
+            echo "distribution=$(pulumi stack output distributionId -s production)"
+            echo "api_url=$(pulumi stack output apiUrl -s production)"
+            echo "api_key=$api_key"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build site
+        run: pnpm --filter web build
+        env:
+          VITE_API_URL: ${{ steps.stack.outputs.api_url }}
+          VITE_API_KEY: ${{ steps.stack.outputs.api_key }}
+
+      - name: Upload to S3
+        working-directory: apps/web/dist/client
+        env:
+          BUCKET: ${{ steps.stack.outputs.bucket }}
+        run: |
+          # Hashed assets never change; HTML revalidates and is invalidated below.
+          aws s3 sync assets "s3://$BUCKET/assets" --cache-control "public, max-age=31536000, immutable"
+          aws s3 sync . "s3://$BUCKET" --exclude "assets/*" --exclude "*.html" \
+            --cache-control "public, max-age=3600, s-maxage=86400"
+          # --delete only touches the included HTML, so removed pages go away
+          # while old hashed assets stay for tabs still running the last build.
+          aws s3 sync . "s3://$BUCKET" --exclude "*" --include "*.html" --delete \
+            --content-type "text/html; charset=utf-8" \
+            --cache-control "public, max-age=0, s-maxage=31536000, must-revalidate"
+
+      - name: Invalidate CloudFront
+        run: |
+          id=$(aws cloudfront create-invalidation --distribution-id "${{ steps.stack.outputs.distribution }}" --paths "/*" --query Invalidation.Id --output text)
+          aws cloudfront wait invalidation-completed --distribution-id "${{ steps.stack.outputs.distribution }}" --id "$id"
+
+      - name: Smoke test
+        run: |
+          for path in / /blogs /projects /feed.xml /sitemap.xml; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "https://www.rohinchopra.com$path")
+            echo "$path $code"
+            test "$code" = 200
+          done
+          test "$(curl -s -o /dev/null -w '%{http_code}' https://www.rohinchopra.com/definitely-not-a-page)" = 404

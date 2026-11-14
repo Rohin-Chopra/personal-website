@@ -3,9 +3,9 @@
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "bradlc.vscode-tailwindcss",
-    "hashicorp.terraform",
+    "golang.go",
     "ms-playwright.playwright",
-    "orta.vscode-jest"
+    "vitest.explorer",
+    "unifiedjs.vscode-mdx"
   ]
 }
-
