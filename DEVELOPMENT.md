@@ -4,8 +4,8 @@ This guide will help you set up the development environment for this project.
 
 ## Prerequisites
 
-- Node.js (v18 or higher)
-- pnpm (v9.5.0 or higher)
+- Node.js 26 (see `.nvmrc`)
+- pnpm 10 (pinned in `package.json`; `corepack enable`)
 - Terraform (for infrastructure changes)
 - AWS CLI (for server deployment)
 
@@ -27,8 +27,8 @@ This guide will help you set up the development environment for this project.
 3. **Set up environment variables**
 
    ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
+   cp apps/web/.env.example apps/web/.env.local
+   # Edit apps/web/.env.local with your configuration
    ```
 
 4. **Start development servers**
@@ -117,6 +117,7 @@ This project uses Husky for git hooks:
 
 - Pre-commit: Runs lint-staged (ESLint + Prettier)
 - Commit-msg: Validates commit messages (Conventional Commits)
+- Pre-push: Runs `pnpm lint` and `pnpm typecheck`
 
 ## VS Code
 
