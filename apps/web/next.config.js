@@ -2,6 +2,13 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
+const isDev = process.env.NODE_ENV === "development";
+
+// `'unsafe-inline'` stays in script-src: statically rendered App Router pages
+// stream the RSC payload through per-page inline scripts, which a hash can't
+// cover, and nonces would force every page to render dynamically.
+// `'unsafe-eval'` is only needed by the dev server (React Refresh).
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -30,10 +37,6 @@ const nextConfig = {
             value: "nosniff",
           },
           {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
-          },
-          {
             key: "Referrer-Policy",
             value: "origin-when-cross-origin",
           },
@@ -41,12 +44,13 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://va.vercel-scripts.com https://challenges.cloudflare.com",
+              `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://vercel.live https://va.vercel-scripts.com https://challenges.cloudflare.com`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
               "frame-src 'self' https://challenges.cloudflare.com https://vercel.live",
               "connect-src 'self' https://*.vercel-scripts.com https://*.vercel-insights.com https://api.rohinchopra.com",
+              "object-src 'none'",
               "frame-ancestors 'self'",
               "base-uri 'self'",
               "form-action 'self'",
