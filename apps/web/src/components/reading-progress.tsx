@@ -30,7 +30,7 @@ export const ReadingProgress = () => {
       className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5"
     >
       <div
-        className="h-full origin-left bg-accent"
+        className="h-full origin-left bg-accent transition-transform duration-75"
         style={{ transform: `scaleX(${progress})` }}
       />
     </div>

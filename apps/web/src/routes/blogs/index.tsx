@@ -2,6 +2,7 @@ import { createFileRoute, useHydrated } from "@tanstack/react-router";
 import { z } from "zod";
 
 import { PostList } from "@/components/post-list";
+import { PageHeader } from "@/components/page-header";
 import { SearchFilter, filterItems } from "@/components/search-filter";
 import { posts, postTags } from "@/lib/posts";
 import { seo } from "@/lib/seo";
@@ -42,19 +43,19 @@ function BlogsPage() {
   const filtered = filterItems(posts, { query, tag, getTags, getText });
 
   return (
-    <div className="container-page py-16 sm:py-24">
-      <header className="mb-12 max-w-3xl">
-        <p className="mb-4 font-mono text-xs tracking-widest text-muted uppercase">
-          Writing
-        </p>
-        <h1 className="font-serif text-6xl tracking-tight sm:text-7xl">
-          Notes &amp; <em>guides</em>.
-        </h1>
-        <p className="mt-5 text-lg leading-relaxed text-muted">
-          Hands-on write-ups about AWS, serverless architecture and
-          infrastructure as code.
-        </p>
-      </header>
+    <div className="container-page py-12 sm:py-16">
+      <PageHeader
+        sheet="§ 01 · Writing"
+        count={`${posts.length} entries`}
+        title={
+          <>
+            Notes &amp; <em>guides</em>.
+          </>
+        }
+      >
+        Hands-on write-ups about AWS, serverless architecture and infrastructure
+        as code.
+      </PageHeader>
 
       <SearchFilter
         key={hydrated ? "client" : "server"}
@@ -84,7 +85,7 @@ function BlogsPage() {
       {filtered.length > 0 ? (
         <PostList posts={filtered} headingLevel={2} />
       ) : (
-        <p className="border-y border-line py-16 text-center text-muted">
+        <p className="border-y border-line py-20 text-center font-display text-2xl text-muted">
           No posts match. Try a different search or tag.
         </p>
       )}

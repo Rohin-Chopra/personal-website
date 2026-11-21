@@ -8,6 +8,10 @@ type Props = {
   action?: ReactNode;
 };
 
+/**
+ * Section opener styled like a drawing's title block: a heavy rule, the
+ * sheet number and name, then the headline in display type.
+ */
 export const SectionHeading = ({
   index,
   title,
@@ -15,18 +19,19 @@ export const SectionHeading = ({
   description,
   action,
 }: Props) => (
-  <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-    <div>
-      <p className="mb-3 font-mono text-xs tracking-widest text-muted uppercase">
-        <span className="text-accent">{index}</span> / {title}
+  <div className="mb-12 sm:mb-16">
+    <div className="flex items-center justify-between gap-4 border-t-2 border-ink pt-3">
+      <p className="label flex gap-4 text-muted">
+        <span className="text-accent">§ {index}</span>
+        <span>{title}</span>
       </p>
-      <h2
-        id={id}
-        className="font-serif text-4xl tracking-tight text-balance sm:text-5xl"
-      >
-        {description}
-      </h2>
+      {action}
     </div>
-    {action}
+    <h2
+      id={id}
+      className="mt-6 max-w-4xl font-display text-5xl leading-[0.95] text-balance sm:text-7xl [&_em]:font-wonk [&_em]:text-accent"
+    >
+      {description}
+    </h2>
   </div>
 );

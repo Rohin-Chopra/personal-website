@@ -1,48 +1,54 @@
 @import "tailwindcss";
-@import "@fontsource-variable/geist";
-@import "@fontsource-variable/geist-mono";
-@import "@fontsource/instrument-serif/400.css";
-@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/fraunces/full.css";
+@import "@fontsource-variable/fraunces/full-italic.css";
+@import "@fontsource-variable/instrument-sans";
+@import "@fontsource-variable/jetbrains-mono";
 
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Design tokens. Light is the default; `.dark` on <html> swaps the palette. */
+/*
+ * Design tokens: warm drafting paper, carbon ink and one vermillion signal.
+ * Light is the default; `.dark` on <html> swaps to a night-shift notebook.
+ */
 :root {
-  --paper: oklch(0.985 0.004 85);
-  --surface: oklch(1 0 0);
-  --ink: oklch(0.2 0.012 285);
-  --muted: oklch(0.5 0.015 285);
-  --line: oklch(0.91 0.006 85);
-  --accent: oklch(0.5 0.24 283);
-  --accent-ink: oklch(0.99 0 0);
-  --accent-soft: oklch(0.5 0.24 283 / 0.09);
-  --danger: oklch(0.55 0.2 25);
-  --success: oklch(0.55 0.13 155);
-  --code-bg: oklch(0.97 0.004 85);
+  --paper: oklch(0.962 0.014 82);
+  --surface: oklch(0.981 0.009 82);
+  --ink: oklch(0.2 0.014 60);
+  --muted: oklch(0.47 0.018 62);
+  --line: oklch(0.86 0.016 78);
+  --accent: oklch(0.6 0.205 34);
+  --accent-ink: oklch(0.985 0.01 82);
+  --accent-soft: oklch(0.6 0.205 34 / 0.1);
+  --danger: oklch(0.52 0.2 25);
+  --success: oklch(0.52 0.12 155);
+  --code-bg: oklch(0.935 0.014 80);
+  --grain-opacity: 0.5;
   color-scheme: light;
 }
 
 .dark {
-  --paper: oklch(0.15 0.008 285);
-  --surface: oklch(0.19 0.01 285);
-  --ink: oklch(0.94 0.006 285);
-  --muted: oklch(0.7 0.015 285);
-  --line: oklch(0.28 0.012 285);
-  --accent: oklch(0.74 0.15 285);
-  --accent-ink: oklch(0.16 0.02 285);
-  --accent-soft: oklch(0.74 0.15 285 / 0.12);
+  --paper: oklch(0.165 0.01 60);
+  --surface: oklch(0.2 0.011 60);
+  --ink: oklch(0.93 0.014 82);
+  --muted: oklch(0.68 0.016 72);
+  --line: oklch(0.3 0.012 60);
+  --accent: oklch(0.7 0.175 40);
+  --accent-ink: oklch(0.17 0.012 60);
+  --accent-soft: oklch(0.7 0.175 40 / 0.13);
   --danger: oklch(0.7 0.17 25);
   --success: oklch(0.75 0.14 155);
-  --code-bg: oklch(0.2 0.012 285);
+  --code-bg: oklch(0.2 0.011 60);
+  --grain-opacity: 0.35;
   color-scheme: dark;
 }
 
 @theme inline {
-  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
-  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-mono:
+    "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
 
   --color-paper: var(--paper);
   --color-surface: var(--surface);
@@ -55,6 +61,29 @@
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-code: var(--code-bg);
+
+  --animate-draw: draw 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
+  --animate-rise: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.6em);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
 
 @layer base {
@@ -66,11 +95,37 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-padding-top: 6rem;
+    font-feature-settings: "ss01", "kern";
+  }
+
+  /* Paper grain: a tiny fractal-noise tile laid over everything. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .dark body::before {
+    mix-blend-mode: screen;
   }
 
   @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
     }
   }
 
@@ -88,31 +143,102 @@
   :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
-    border-radius: 4px;
   }
 }
 
 @utility container-page {
   margin-inline: auto;
   width: 100%;
-  max-width: 72rem;
+  max-width: 78rem;
   padding-inline: 1.25rem;
   @media (width >= 48rem) {
-    padding-inline: 2rem;
+    padding-inline: 2.5rem;
   }
 }
 
-/* A faint dot grid used behind the hero. */
-@utility bg-dots {
-  background-image: radial-gradient(
-    color-mix(in oklch, var(--ink) 14%, transparent) 1px,
-    transparent 1px
-  );
-  background-size: 22px 22px;
+/* Display type: Fraunces at its largest optical size, slightly soft. */
+@utility font-display {
+  font-family: var(--font-serif);
+  font-variation-settings:
+    "opsz" 144,
+    "SOFT" 30,
+    "WONK" 0;
+  font-weight: 340;
+  letter-spacing: -0.025em;
+}
+
+/* The italic with Fraunces' "wonky" alternates switched on. */
+@utility font-wonk {
+  font-style: italic;
+  font-variation-settings:
+    "opsz" 144,
+    "SOFT" 100,
+    "WONK" 1;
+}
+
+/* Small mono annotations, like the notes on a technical drawing. */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Graph-paper grid. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklch, var(--ink) 6%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--ink) 6%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 28px 28px;
 }
 
 @utility text-balance {
   text-wrap: balance;
+}
+
+/* Corner registration marks around a framed plate. */
+.plate {
+  position: relative;
+}
+
+.plate::before,
+.plate::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  border-color: var(--ink);
+}
+
+.plate::before {
+  top: -7px;
+  left: -7px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.plate::after {
+  right: -7px;
+  bottom: -7px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+}
+
+/* Animated signal pulses in the architecture figure. */
+@media (prefers-reduced-motion: reduce) {
+  .signal {
+    display: none;
+  }
 }
 
 /* --- Blog post body ------------------------------------------------------ */
@@ -146,9 +272,58 @@
 
 .prose-post :where(h2) {
   font-family: var(--font-serif);
+  font-variation-settings:
+    "opsz" 96,
+    "SOFT" 30;
   font-weight: 400;
-  font-size: 2rem;
-  letter-spacing: -0.01em;
+  font-size: 2.125rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-top: 3.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.prose-post :where(h3) {
+  font-family: var(--font-serif);
+  font-variation-settings: "opsz" 48;
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+
+/* An illuminated first letter for the opening paragraph. */
+.prose-post > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-serif);
+  font-variation-settings:
+    "opsz" 144,
+    "SOFT" 100,
+    "WONK" 1;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 4.6em;
+  line-height: 0.82;
+  margin: 0.08em 0.1em -0.05em 0;
+  color: var(--accent);
+}
+
+.prose-post :where(blockquote) {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.25em;
+  border-left-width: 2px;
+  padding-left: 1.25em;
+}
+
+.prose-post :where(blockquote p)::before,
+.prose-post :where(blockquote p)::after {
+  content: none;
+}
+
+.prose-post :where(ul > li)::marker {
+  content: "— ";
+  color: var(--accent);
 }
 
 .prose-post .heading-anchor {
@@ -175,8 +350,8 @@
 .prose-post :where(:not(pre) > code) {
   background: var(--code-bg);
   border: 1px solid var(--line);
-  border-radius: 0.375rem;
-  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.35rem;
   font-size: 0.875em;
   font-weight: 500;
 }
@@ -188,14 +363,14 @@
 
 .prose-post :where(pre) {
   border: 1px solid var(--line);
-  border-radius: 0.75rem;
+  border-radius: 0.25rem;
   font-size: 0.8125rem;
   line-height: 1.7;
   margin: 0;
 }
 
 .prose-post :where(img) {
-  border-radius: 0.75rem;
+  border-radius: 0.25rem;
   border: 1px solid var(--line);
   margin-inline: auto;
 }

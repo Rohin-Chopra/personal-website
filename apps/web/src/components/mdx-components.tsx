@@ -82,7 +82,7 @@ export const MDXPre = ({ children, ...props }: ComponentProps<"pre">) => {
         type="button"
         onClick={copy}
         aria-label={copied ? "Copied" : "Copy code"}
-        className="absolute top-2.5 right-2.5 z-10 grid size-8 place-items-center rounded-md border border-line bg-surface text-muted opacity-0 transition-all group-hover/code:opacity-100 hover:text-ink focus-visible:opacity-100"
+        className="absolute top-2.5 right-2.5 z-10 grid size-8 place-items-center rounded-sm border border-line bg-surface text-muted opacity-0 transition-all group-hover/code:opacity-100 hover:text-ink focus-visible:opacity-100"
       >
         {copied ? (
           <Check aria-hidden className="size-4 text-success" />
@@ -119,7 +119,7 @@ export const MDXImage = ({
 );
 
 export const BlogAlert = ({ children }: PropsWithChildren) => (
-  <aside className="not-prose my-8 flex gap-3 rounded-xl border border-accent/30 bg-accent-soft p-5">
+  <aside className="not-prose my-8 flex gap-3 border-l-2 border-accent bg-accent-soft py-4 pr-5 pl-4">
     <Info aria-hidden className="mt-0.5 size-5 shrink-0 text-accent" />
     <div className="space-y-1">{children}</div>
   </aside>

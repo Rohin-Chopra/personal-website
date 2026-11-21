@@ -10,28 +10,32 @@ const font = (pkg: string, file: string) =>
   readFile(require.resolve(`${pkg}/files/${file}`));
 
 const fonts = Promise.all([
-  font("@fontsource/geist", "geist-latin-400-normal.woff"),
-  font("@fontsource/geist", "geist-latin-600-normal.woff"),
-  font(
-    "@fontsource/instrument-serif",
-    "instrument-serif-latin-400-normal.woff",
-  ),
-]).then(([regular, semibold, serif]) => [
+  font("@fontsource/instrument-sans", "instrument-sans-latin-400-normal.woff"),
+  font("@fontsource/fraunces", "fraunces-latin-300-normal.woff"),
+  font("@fontsource/fraunces", "fraunces-latin-400-italic.woff"),
+  font("@fontsource/jetbrains-mono", "jetbrains-mono-latin-400-normal.woff"),
+]).then(([sans, serif, serifItalic, mono]) => [
   {
-    name: "Geist",
-    data: regular,
+    name: "Instrument Sans",
+    data: sans,
     weight: 400 as const,
     style: "normal" as const,
   },
   {
-    name: "Geist",
-    data: semibold,
-    weight: 600 as const,
+    name: "Fraunces",
+    data: serif,
+    weight: 300 as const,
     style: "normal" as const,
   },
   {
-    name: "Instrument Serif",
-    data: serif,
+    name: "Fraunces",
+    data: serifItalic,
+    weight: 400 as const,
+    style: "italic" as const,
+  },
+  {
+    name: "JetBrains Mono",
+    data: mono,
     weight: 400 as const,
     style: "normal" as const,
   },
@@ -52,6 +56,11 @@ const el = (
   props: { style: { display: "flex", ...style }, children },
 });
 
+const PAPER = "#f4efe6";
+const INK = "#2a241e";
+const MUTED = "#7a6f63";
+const ACCENT = "#d9481f";
+
 export const renderOgImage = async ({ eyebrow, title, subtitle }: Options) => {
   const tree = el(
     "div",
@@ -60,50 +69,41 @@ export const renderOgImage = async ({ eyebrow, title, subtitle }: Options) => {
       height: "100%",
       flexDirection: "column",
       justifyContent: "space-between",
-      padding: "72px 80px",
-      backgroundColor: "#141218",
+      padding: "64px 80px 56px",
+      backgroundColor: PAPER,
       backgroundImage:
-        "radial-gradient(circle at 92% 0%, rgba(124, 98, 255, 0.45), transparent 55%), radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)",
-      backgroundSize: "100% 100%, 26px 26px",
-      color: "#ecebf0",
-      fontFamily: "Geist",
+        "linear-gradient(rgba(42,36,30,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(42,36,30,0.06) 1px, transparent 1px)",
+      backgroundSize: "32px 32px",
+      color: INK,
+      fontFamily: "Instrument Sans",
     },
     [
-      el("div", { alignItems: "center", gap: 18 }, [
-        el(
-          "div",
-          {
-            width: 52,
-            height: 52,
-            borderRadius: 12,
-            backgroundColor: "#ecebf0",
-            color: "#141218",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "Instrument Serif",
-            fontSize: 30,
-          },
-          "rc",
-        ),
-        el(
-          "div",
-          {
-            fontSize: 26,
-            letterSpacing: 4,
-            textTransform: "uppercase",
-            color: "#a99cff",
-          },
-          eyebrow,
-        ),
-      ]),
+      el(
+        "div",
+        {
+          justifyContent: "space-between",
+          borderTop: `4px solid ${INK}`,
+          paddingTop: 16,
+          fontFamily: "JetBrains Mono",
+          fontSize: 20,
+          letterSpacing: 3,
+          textTransform: "uppercase",
+          color: MUTED,
+        },
+        [
+          el("div", { color: ACCENT }, eyebrow),
+          el("div", {}, "rohinchopra.com"),
+        ],
+      ),
       el("div", { flexDirection: "column" }, [
         el(
           "div",
           {
-            fontFamily: "Instrument Serif",
-            fontSize: title.length > 60 ? 64 : 80,
-            lineHeight: 1.02,
-            letterSpacing: -1,
+            fontFamily: "Fraunces",
+            fontWeight: 300,
+            fontSize: title.length > 60 ? 66 : 84,
+            lineHeight: 1,
+            letterSpacing: -2,
           },
           title,
         ),
@@ -112,11 +112,11 @@ export const renderOgImage = async ({ eyebrow, title, subtitle }: Options) => {
               el(
                 "div",
                 {
-                  marginTop: 26,
-                  fontSize: 30,
-                  lineHeight: 1.35,
-                  color: "#a6a3b3",
-                  maxWidth: 980,
+                  marginTop: 28,
+                  fontSize: 28,
+                  lineHeight: 1.4,
+                  color: MUTED,
+                  maxWidth: 960,
                 },
                 subtitle,
               ),
@@ -125,8 +125,11 @@ export const renderOgImage = async ({ eyebrow, title, subtitle }: Options) => {
       ]),
       el(
         "div",
-        { justifyContent: "space-between", fontSize: 24, color: "#8b879a" },
-        [el("div", {}, "Rohin Chopra"), el("div", {}, "rohinchopra.com")],
+        { alignItems: "baseline", fontSize: 40, fontFamily: "Fraunces" },
+        [
+          el("div", { fontWeight: 300, marginRight: 12 }, "Rohin"),
+          el("div", { fontStyle: "italic", color: ACCENT }, "Chopra"),
+        ],
       ),
     ],
   );

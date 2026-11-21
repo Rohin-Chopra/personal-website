@@ -2,6 +2,7 @@ import { createFileRoute, useHydrated } from "@tanstack/react-router";
 import { z } from "zod";
 
 import { ProjectCard } from "@/components/project-card";
+import { PageHeader } from "@/components/page-header";
 import { SearchFilter, filterItems } from "@/components/search-filter";
 import projects from "@/content/projects.json";
 import { seo } from "@/lib/seo";
@@ -49,19 +50,19 @@ function ProjectsPage() {
   });
 
   return (
-    <div className="container-page py-16 sm:py-24">
-      <header className="mb-12 max-w-3xl">
-        <p className="mb-4 font-mono text-xs tracking-widest text-muted uppercase">
-          Projects
-        </p>
-        <h1 className="font-serif text-6xl tracking-tight sm:text-7xl">
-          Selected <em>work</em>.
-        </h1>
-        <p className="mt-5 text-lg leading-relaxed text-muted">
-          A collection of projects I&apos;ve built in my spare time, showcasing
-          my skills in web development, UI/UX design and problem-solving.
-        </p>
-      </header>
+    <div className="container-page py-12 sm:py-16">
+      <PageHeader
+        sheet="§ 02 · Projects"
+        count={`${projects.length} plates`}
+        title={
+          <>
+            Selected <em>work</em>.
+          </>
+        }
+      >
+        A collection of projects I&apos;ve built in my spare time, showcasing my
+        skills in web development, UI/UX design and problem-solving.
+      </PageHeader>
 
       <SearchFilter
         key={hydrated ? "client" : "server"}
@@ -89,13 +90,17 @@ function ProjectsPage() {
       />
 
       {filtered.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-x-10 gap-y-16 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((project) => (
-            <ProjectCard key={project.title} project={project} />
+            <ProjectCard
+              key={project.title}
+              project={project}
+              figure={`2.${projects.indexOf(project) + 1}`}
+            />
           ))}
         </div>
       ) : (
-        <p className="border-y border-line py-16 text-center text-muted">
+        <p className="border-y border-line py-20 text-center font-display text-2xl text-muted">
           No projects match. Try a different search or technology.
         </p>
       )}

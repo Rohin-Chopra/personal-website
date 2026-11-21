@@ -88,10 +88,10 @@ const errorFor = (
 };
 
 const inputClass = (invalid: boolean) =>
-  `w-full rounded-xl border bg-surface px-4 py-3 text-[15px] transition-colors placeholder:text-muted/70 focus:ring-2 focus:outline-none ${
+  `w-full border-0 border-b bg-transparent px-0 py-2.5 text-[17px] transition-colors placeholder:text-muted/60 focus:outline-none focus-visible:outline-none ${
     invalid
-      ? "border-danger focus:border-danger focus:ring-danger/25"
-      : "border-line focus:border-accent focus:ring-accent/25"
+      ? "border-danger focus:border-danger"
+      : "border-ink/40 focus:border-accent"
   }`;
 
 export const ContactForm = () => {
@@ -196,7 +196,7 @@ export const ContactForm = () => {
   const sending = status.state === "sending";
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-5">
+    <form onSubmit={onSubmit} noValidate className="space-y-8">
       {/* Honeypot: hidden from people and assistive tech; bots fill it in. */}
       <div
         aria-hidden
@@ -212,12 +212,9 @@ export const ContactForm = () => {
         />
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-8 sm:grid-cols-2">
         <div>
-          <label
-            htmlFor={`${id}-name`}
-            className="mb-2 block text-sm font-medium"
-          >
+          <label htmlFor={`${id}-name`} className="label block text-muted">
             Name
           </label>
           <input
@@ -229,10 +226,7 @@ export const ContactForm = () => {
           {fieldError("name")}
         </div>
         <div>
-          <label
-            htmlFor={`${id}-email`}
-            className="mb-2 block text-sm font-medium"
-          >
+          <label htmlFor={`${id}-email`} className="label block text-muted">
             Email
           </label>
           <input
@@ -246,15 +240,12 @@ export const ContactForm = () => {
         </div>
       </div>
       <div>
-        <label
-          htmlFor={`${id}-message`}
-          className="mb-2 block text-sm font-medium"
-        >
+        <label htmlFor={`${id}-message`} className="label block text-muted">
           Message
         </label>
         <textarea
           {...field("message")}
-          rows={6}
+          rows={5}
           placeholder="What would you like to talk about?"
           className={`${inputClass(Boolean(errors.message))} resize-y`}
         />
@@ -274,7 +265,7 @@ export const ContactForm = () => {
           type="submit"
           disabled={sending}
           aria-busy={sending}
-          className="group inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 font-medium text-paper transition-all hover:bg-accent hover:text-accent-ink disabled:opacity-70"
+          className="group inline-flex items-center justify-center gap-2 bg-ink px-6 py-3.5 font-medium text-paper transition-colors hover:bg-accent hover:text-accent-ink disabled:opacity-70"
         >
           {sending ? (
             <>

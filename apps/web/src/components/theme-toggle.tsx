@@ -20,11 +20,11 @@ export const ThemeToggle = () => {
     <button
       type="button"
       onClick={() => setTheme(next)}
-      className="inline-flex size-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-accent-soft hover:text-ink"
+      className="inline-flex size-9 items-center justify-center rounded-full text-muted transition-[color,transform] duration-500 hover:rotate-[30deg] hover:text-accent"
       aria-label={`Theme: ${theme}. Switch to ${next}`}
       title={`Theme: ${theme}`}
     >
-      <Icon aria-hidden className="size-[18px]" strokeWidth={1.75} />
+      <Icon aria-hidden className="size-[17px]" strokeWidth={1.6} />
     </button>
   );
 };

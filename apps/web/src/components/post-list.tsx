@@ -1,8 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 import { formatBlogDate } from "@/lib/post-schema";
+import { posts as allPosts } from "@/lib/posts";
 import type { PostSummary } from "@/lib/types";
+
+/** Oldest post is No. 1, so numbers stay put when the list is filtered. */
+const numberOf = (slug: string) =>
+  String(allPosts.length - allPosts.findIndex((p) => p.slug === slug)).padStart(
+    2,
+    "0",
+  );
 
 export const PostList = ({
   posts,
@@ -14,33 +22,42 @@ export const PostList = ({
   const Heading = `h${headingLevel}` as const;
 
   return (
-    <ol className="divide-y divide-line border-y border-line">
+    <ol className="border-b border-line">
       {posts.map((post) => (
-        <li key={post.slug}>
+        <li key={post.slug} className="border-t border-line">
           <Link
             to="/blogs/$slug"
             params={{ slug: post.slug }}
-            className="group grid gap-2 py-7 transition-colors sm:grid-cols-[10rem_1fr_auto] sm:gap-8"
+            className="group relative grid gap-x-8 gap-y-3 py-8 sm:grid-cols-[5rem_1fr_11rem] sm:py-10"
           >
-            <div className="font-mono text-xs leading-6 text-muted">
-              <time dateTime={post.createdAt}>
-                {formatBlogDate(post.createdAt)}
-              </time>
-              <span className="sm:block"> · {post.readingTime} min read</span>
-            </div>
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 -left-3 w-0.5 origin-top scale-y-0 bg-accent transition-transform duration-500 group-hover:scale-y-100 sm:-left-5"
+            />
+            <span
+              aria-hidden
+              className="font-display text-4xl leading-none text-muted/50 transition-colors duration-300 group-hover:text-accent sm:text-5xl"
+            >
+              {numberOf(post.slug)}
+            </span>
             <div>
-              <Heading className="text-xl font-semibold tracking-tight text-balance transition-colors group-hover:text-accent">
-                {post.title}
+              <Heading className="font-display text-3xl leading-[1.05] text-balance sm:text-4xl">
+                <span className="bg-[linear-gradient(var(--accent),var(--accent))] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 group-hover:bg-[length:100%_1px]">
+                  {post.title}
+                </span>
               </Heading>
-              <p className="mt-2 max-w-2xl leading-relaxed text-muted">
+              <p className="mt-3 max-w-2xl leading-relaxed text-muted">
                 {post.description}
               </p>
               {post.tags.length > 0 && (
-                <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Tags">
+                <ul
+                  className="label mt-4 flex flex-wrap gap-x-3 gap-y-1 text-muted"
+                  aria-label="Tags"
+                >
                   {post.tags.map((tag) => (
                     <li
                       key={tag}
-                      className="rounded-full bg-accent-soft px-2.5 py-0.5 font-mono text-[11px] text-accent"
+                      className="before:text-accent before:content-['#']"
                     >
                       {tag}
                     </li>
@@ -48,10 +65,18 @@ export const PostList = ({
                 </ul>
               )}
             </div>
-            <ArrowRight
-              aria-hidden
-              className="hidden size-5 self-center text-muted transition-all group-hover:translate-x-1 group-hover:text-accent sm:block"
-            />
+            <div className="flex items-start justify-between gap-4 font-mono text-xs leading-5 text-muted sm:flex-col sm:items-end sm:text-right">
+              <div>
+                <time dateTime={post.createdAt} className="block text-ink">
+                  {formatBlogDate(post.createdAt)}
+                </time>
+                <span>{post.readingTime} min read</span>
+              </div>
+              <ArrowUpRight
+                aria-hidden
+                className="size-5 text-muted transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
+              />
+            </div>
           </Link>
         </li>
       ))}

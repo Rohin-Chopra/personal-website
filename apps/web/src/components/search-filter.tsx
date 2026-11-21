@@ -18,10 +18,10 @@ type Props = {
 };
 
 const chip = (active: boolean) =>
-  `rounded-full border px-3 py-1 font-mono text-xs transition-colors ${
+  `label border px-2.5 py-1.5 transition-colors ${
     active
-      ? "border-accent bg-accent text-accent-ink"
-      : "border-line text-muted hover:border-ink/30 hover:text-ink"
+      ? "border-ink bg-ink text-paper"
+      : "border-line text-muted hover:border-accent hover:text-accent"
   }`;
 
 export const SearchFilter = ({
@@ -44,11 +44,11 @@ export const SearchFilter = ({
   };
 
   return (
-    <div className="mb-10 space-y-4">
-      <div className="relative max-w-xl">
+    <div className="mb-12 grid gap-5 lg:grid-cols-[22rem_1fr] lg:items-start lg:gap-10">
+      <div className="relative">
         <Search
           aria-hidden
-          className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted"
+          className="pointer-events-none absolute top-1/2 left-0 size-4 -translate-y-1/2 text-muted"
         />
         <input
           type="search"
@@ -57,14 +57,14 @@ export const SearchFilter = ({
           placeholder={placeholder}
           value={query}
           onChange={(e) => changeQuery(e.target.value)}
-          className="w-full rounded-full border border-line bg-surface py-2.5 pr-10 pl-10 text-sm placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/30 focus:outline-none [&::-webkit-search-cancel-button]:hidden"
+          className="w-full border-b border-ink bg-transparent py-2.5 pr-10 pl-7 text-base placeholder:text-muted focus:border-accent focus:outline-none [&::-webkit-search-cancel-button]:hidden"
         />
         {query && (
           <button
             type="button"
             onClick={() => changeQuery("")}
             aria-label="Clear search"
-            className="absolute top-1/2 right-2 grid size-7 -translate-y-1/2 place-items-center rounded-full text-muted hover:bg-accent-soft hover:text-ink"
+            className="absolute top-1/2 right-0 grid size-7 -translate-y-1/2 place-items-center text-muted hover:text-accent"
           >
             <X aria-hidden className="size-4" />
           </button>
@@ -102,7 +102,7 @@ export const SearchFilter = ({
       <p
         id={statusId}
         aria-live="polite"
-        className="font-mono text-xs text-muted"
+        className="label text-muted lg:col-span-2"
       >
         {resultCount} {resultCount === 1 ? noun.singular : noun.plural} found
       </p>

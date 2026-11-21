@@ -21,6 +21,11 @@ export default defineConfig({
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
   server: { port: 3000 },
+  build: {
+    // The CSP only allows fonts from 'self', so never inline them as data URIs.
+    assetsInlineLimit: (file) =>
+      /\.(woff2?|ttf|otf)$/.test(file) ? false : undefined,
+  },
   plugins: [
     content({ root }),
     {

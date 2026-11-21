@@ -77,7 +77,7 @@ function PostPage() {
         <header className="mx-auto max-w-3xl">
           <Link
             to="/blogs"
-            className="group mb-10 inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink"
+            className="label group mb-12 inline-flex items-center gap-1.5 text-muted hover:text-accent"
           >
             <ArrowLeft
               aria-hidden
@@ -85,7 +85,7 @@ function PostPage() {
             />
             All posts
           </Link>
-          <p className="font-mono text-xs text-muted">
+          <p className="label flex flex-wrap gap-x-2 border-t-2 border-ink pt-3 text-muted">
             <time dateTime={post.createdAt}>
               {formatBlogDate(post.createdAt)}
             </time>
@@ -100,10 +100,10 @@ function PostPage() {
             )}{" "}
             · {post.readingTime} min read
           </p>
-          <h1 className="mt-4 font-serif text-5xl leading-[1.05] tracking-tight text-balance sm:text-6xl">
+          <h1 className="mt-8 font-display text-5xl leading-[0.98] text-balance sm:text-7xl">
             {post.title}
           </h1>
-          <p className="mt-5 text-xl leading-relaxed text-muted">
+          <p className="mt-6 font-serif text-xl leading-relaxed text-muted italic sm:text-2xl">
             {post.description}
           </p>
           {post.tags.length > 0 && (
@@ -113,7 +113,7 @@ function PostPage() {
                   <Link
                     to="/blogs"
                     search={{ tag }}
-                    className="rounded-full bg-accent-soft px-2.5 py-0.5 font-mono text-[11px] text-accent hover:bg-accent hover:text-accent-ink"
+                    className="label border border-line px-2 py-1 text-muted transition-colors hover:border-accent hover:text-accent"
                   >
                     {tag}
                   </Link>
@@ -126,19 +126,15 @@ function PostPage() {
         <div className="relative mx-auto mt-12 max-w-3xl border-t border-line pt-10">
           {post.headings.length > 0 && (
             <>
-              <details className="mb-10 rounded-xl border border-line bg-surface p-4 xl:hidden">
-                <summary className="cursor-pointer text-sm font-medium">
-                  On this page
-                </summary>
+              <details className="mb-10 border border-line bg-surface p-4 xl:hidden">
+                <summary className="label cursor-pointer">On this page</summary>
                 <nav aria-label="Table of contents" className="mt-4">
                   <TableOfContents headings={post.headings} />
                 </nav>
               </details>
               <aside className="absolute top-10 left-full ml-14 hidden h-[calc(100%-2.5rem)] w-60 xl:block">
                 <nav aria-label="Table of contents" className="sticky top-24">
-                  <p className="mb-3 font-mono text-xs tracking-widest text-muted uppercase">
-                    On this page
-                  </p>
+                  <p className="label mb-3 text-muted">On this page</p>
                   <TableOfContents headings={post.headings} />
                 </nav>
               </aside>
@@ -154,7 +150,7 @@ function PostPage() {
           <footer className="mt-16 space-y-12 border-t border-line pt-10">
             {related.length > 0 && (
               <section aria-labelledby="related-heading">
-                <h2 id="related-heading" className="mb-5 font-serif text-3xl">
+                <h2 id="related-heading" className="mb-6 font-display text-4xl">
                   Related posts
                 </h2>
                 <ul className="grid gap-4 sm:grid-cols-2">
@@ -163,12 +159,14 @@ function PostPage() {
                       <Link
                         to="/blogs/$slug"
                         params={{ slug: other.slug }}
-                        className="block h-full rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent/40"
+                        className="block h-full border border-line bg-surface p-5 transition-colors hover:border-accent"
                       >
-                        <p className="font-mono text-xs text-muted">
+                        <p className="label flex flex-wrap gap-x-2 border-t-2 border-ink pt-3 text-muted">
                           {formatBlogDate(other.createdAt)}
                         </p>
-                        <p className="mt-1.5 font-medium">{other.title}</p>
+                        <p className="mt-2 font-display text-xl leading-snug">
+                          {other.title}
+                        </p>
                       </Link>
                     </li>
                   ))}
@@ -185,12 +183,12 @@ function PostPage() {
                     to="/blogs/$slug"
                     params={{ slug: previous.slug }}
                     rel="prev"
-                    className="group rounded-xl border border-line p-5 transition-colors hover:border-accent/40"
+                    className="group border-t-2 border-ink pt-4 transition-colors hover:border-accent"
                   >
-                    <span className="inline-flex items-center gap-1 font-mono text-xs text-muted">
+                    <span className="label inline-flex items-center gap-1 text-muted">
                       <ArrowLeft aria-hidden className="size-3.5" /> Previous
                     </span>
-                    <span className="mt-1.5 block font-medium">
+                    <span className="mt-2 block font-display text-2xl leading-snug transition-colors group-hover:text-accent">
                       {previous.title}
                     </span>
                   </Link>
@@ -202,12 +200,12 @@ function PostPage() {
                     to="/blogs/$slug"
                     params={{ slug: next.slug }}
                     rel="next"
-                    className="group rounded-xl border border-line p-5 text-right transition-colors hover:border-accent/40"
+                    className="group border-t-2 border-ink pt-4 text-right transition-colors hover:border-accent"
                   >
-                    <span className="inline-flex items-center gap-1 font-mono text-xs text-muted">
+                    <span className="label inline-flex items-center gap-1 text-muted">
                       Next <ArrowRight aria-hidden className="size-3.5" />
                     </span>
-                    <span className="mt-1.5 block font-medium">
+                    <span className="mt-2 block font-display text-2xl leading-snug transition-colors group-hover:text-accent">
                       {next.title}
                     </span>
                   </Link>
